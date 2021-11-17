@@ -1,0 +1,4 @@
+﻿  FFMpeg.cpp
+c:\users\kun\source\repos\ffmpeg\ffmpeglib\include\libavutil\rational.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+c:\users\kun\source\repos\ffmpeg\ffmpeg\ffmpeg.cpp(126): warning C4018: “<”: 有符号/无符号不匹配
+  FFMpeg.vcxproj -> C:\Users\Kun\source\repos\FFMpeg\x64\Debug\FFMpeg.exe
