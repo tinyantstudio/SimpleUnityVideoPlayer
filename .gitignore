@@ -58,3 +58,6 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+/FFMpegSources/ffmpeglib-win
+/FFMpegSources/ffmpeg-libav-tutorial-1.0.0
+/FFMpegSources/NativePlayer/build
