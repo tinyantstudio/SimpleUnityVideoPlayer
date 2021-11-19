@@ -432,18 +432,3 @@ static void save_bytes_to_file(unsigned char* buf, int size, char *filename)
 	fwrite(buf, 1, size, f);
 	fclose(f);
 }
-
-int make_sub_please(int a, int b)
-{
-	return a + b;
-}
-
-
-int get_framebuffer_size()
-{
-
-}
-unsigned char * get_framebuffer_data()
-{
-
-}

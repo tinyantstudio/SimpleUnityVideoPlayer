@@ -8,14 +8,16 @@
 #endif
 
 // define C interface
+// video plyer interface
 extern "C"
 {
 	int VIDEOPLAYERLIB_API enter_test_videoPlayer_static_Lib();
-	int VIDEOPLAYERLIB_API make_sub_please(int a, int b);
 
-	int VIDEOPLAYERLIB_API get_framebuffer_size();
-	unsigned char * VIDEOPLAYERLIB_API get_framebuffer_data();
-
+	void VIDEOPLAYERLIB_API player_init();
+	void VIDEOPLAYERLIB_API player_pause();
+	void VIDEOPLAYERLIB_API player_resume();
+	void VIDEOPLAYERLIB_API player_getInformation();
+	void VIDEOPLAYERLIB_API player_shutdown();
 }
 
 #endif

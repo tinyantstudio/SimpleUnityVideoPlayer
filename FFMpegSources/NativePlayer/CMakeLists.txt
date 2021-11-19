@@ -21,11 +21,13 @@ include_directories(../ffmpeglib-win/include)
 link_directories("../ffmpeglib-win/lib")
 
 include_directories(videoplayer/include)
+include_directories(chatengine/include)
 
 add_subdirectory(videoplayer)
+add_subdirectory(chatengine)
 
 add_executable(${PROJECT_NAME} ${PROJECT_SOURCES} ${PROJECT_HEADERS})
-target_link_libraries(${PROJECT_NAME} videoPlayerLib)
+target_link_libraries(${PROJECT_NAME} videoPlayerLib chatEngineLib)
 
 target_link_libraries(${PROJECT_NAME} avcodec avdevice avformat swscale avutil)
 
@@ -37,7 +39,14 @@ add_custom_command(
     TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/../ffmpeglib-win/bin $<TARGET_FILE_DIR:${PROJECT_NAME}>)
 
+# copy videoPlayerlib dll to exe folder
 add_custom_command(
     TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/videoPlayerLib/$<CONFIGURATION> $<TARGET_FILE_DIR:${PROJECT_NAME}>
+)
+
+# copy chatEngine dll to exe folder
+add_custom_command(
+    TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/chatEngineLib/$<CONFIGURATION> $<TARGET_FILE_DIR:${PROJECT_NAME}>
 )
