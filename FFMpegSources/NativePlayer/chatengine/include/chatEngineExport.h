@@ -59,6 +59,13 @@ typedef struct tool_struct_person_info
 	char* infortitle;
 }tool_person_info, *lp_tool_person_info;
 
+
+typedef struct tool_mesh_vertex
+{
+	float pos[3];
+	float normal[3];
+}mesh_vertex;
+
 extern "C" {
 	// simple tools
 	CHATENGINELIB_API void tool_c_strncpy(char* dest, const char* src, size_t n);
@@ -69,7 +76,11 @@ extern "C" {
 	CHATENGINELIB_API void* tool_get_one_person(const char* firstName, const char* secondName, bool man, int age);
 	CHATENGINELIB_API void tool_modify_person(lp_tool_person_info data);
 	CHATENGINELIB_API int tool_get_info(tool_info info);
-
+	CHATENGINELIB_API void* tool_get_string(const char* inputstring);
+	CHATENGINELIB_API int tool_get_pow(int a, int b);
+	CHATENGINELIB_API void tool_pass_array(void *meshvertex, int vertexcount, float* pos, float* normal);
+	CHATENGINELIB_API char* tool_get_vertex_pos();
+	CHATENGINELIB_API void tool_get_vertex_pos_callback(fn_tool_callback_int callback);
 }
 
 #endif // !CHATENGINE_H

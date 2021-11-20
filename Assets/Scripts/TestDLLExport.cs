@@ -21,7 +21,7 @@ public class LibVideoPlayerExport
 // 调用方将清理堆栈 cdecl
 // 被调用方将清理堆栈 StdCall
 [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-public delegate void tool_callback_int(int value, [MarshalAs(UnmanagedType.LPStr)] string message);
+public delegate void tool_callback_int(int value, string message);
 
 public class LibChatExport
 {
@@ -53,20 +53,20 @@ public struct tools_struct_infor
     public int ivalue;
     public int x;
     public int y;
-    [MarshalAs(UnmanagedType.LPStr)] public string messagestr;
-    [MarshalAs(UnmanagedType.LPStr)] public string namestr;
+    public string messagestr;
+    public string namestr;
 }
 
 [StructLayout(LayoutKind.Sequential)]
 public struct tools_struct_person
 {
-    [MarshalAs(UnmanagedType.LPStr)] public string firstName;
-    [MarshalAs(UnmanagedType.LPStr)] public string secondName;
+    public string firstName;
+    public string secondName;
     public int age;
     public int num;
 }
 
-[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+[StructLayout(LayoutKind.Sequential)]
 public struct MyPerson_Info
 {
     public IntPtr person;
@@ -128,8 +128,8 @@ public class TestDLLExport : MonoBehaviour
             LibChatExport.tool_modify_person(ref personInfo);
 
             tools_struct_person personaftermodify =
-                (tools_struct_person)Marshal.PtrToStructure(personInfo.person, typeof(tools_struct_person));
-            infor = (tools_struct_infor)Marshal.PtrToStructure(personInfo.infor, typeof(tools_struct_infor));
+                (tools_struct_person) Marshal.PtrToStructure(personInfo.person, typeof(tools_struct_person));
+            infor = (tools_struct_infor) Marshal.PtrToStructure(personInfo.infor, typeof(tools_struct_infor));
             Debug.Log(
                 $"after--->name: {personaftermodify.firstName}, secondname: {personaftermodify.secondName}, age: {personaftermodify.age}");
             Debug.Log(
