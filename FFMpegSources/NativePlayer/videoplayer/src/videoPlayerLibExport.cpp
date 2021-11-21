@@ -44,3 +44,8 @@ int player_get_height()
 {
 	return m_player.getHeight();
 }
+
+unsigned long player_get_duration()
+{
+	return m_player.getDuration();
+}

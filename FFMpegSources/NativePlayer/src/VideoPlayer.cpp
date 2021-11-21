@@ -35,7 +35,7 @@ int main(int argc, const char *argv[])
 	int height = player_get_height();
 
 	std::cout << "Video Width: " << width << ", Height: " << height << std::endl;
-
+	std::cout << "Video duration: " << player_get_duration() << endl;
 	int framecount = 10;
 	int validframe = 0;
 	while (framecount-- >= 0)

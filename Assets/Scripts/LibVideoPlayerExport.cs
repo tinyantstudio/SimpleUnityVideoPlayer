@@ -21,7 +21,7 @@ public class LibVideoPlayerExport
     [DllImport("videoPlayerLib")]
     public static extern IntPtr player_getOneFrameBuffer();
 
-    // we need to frame buffer data alloc in native C++
+    // we need to free frame buffer data alloc in native C++
     [DllImport("videoPlayerLib")]
     public static extern void player_getOneFrameBuffer_Done(IntPtr data);
 
@@ -33,4 +33,7 @@ public class LibVideoPlayerExport
 
     [DllImport("videoPlayerLib")]
     public static extern int player_get_height();
+
+    [DllImport("videoPlayerLib")]
+    public static extern ulong player_get_duration();
 }

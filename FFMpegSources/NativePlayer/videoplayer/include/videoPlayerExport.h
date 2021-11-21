@@ -21,6 +21,7 @@ extern "C"
 	VIDEOPLAYERLIB_API int player_shutdown();
 	VIDEOPLAYERLIB_API int player_get_width();
 	VIDEOPLAYERLIB_API int player_get_height();
+	VIDEOPLAYERLIB_API unsigned long player_get_duration();
 }
 
 #endif

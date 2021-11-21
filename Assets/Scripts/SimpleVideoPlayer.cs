@@ -11,6 +11,7 @@ public class SimpleVideoPlayer : MonoBehaviour
     public string mediaPath = string.Empty;
     private float _timeinterval = 1 / 25f;
     public float _playTotalTime = 10;
+    public bool _customTotalTime = false;
     public float _curPlayTime = 0;
     public int _playFPS = 30;
     public int _CurFrameCount = 0;
@@ -67,6 +68,11 @@ public class SimpleVideoPlayer : MonoBehaviour
         Debug.LogAssertion(ret == 0);
         ret = LibVideoPlayerExport.player_startPlayVideo(mediaPath);
         Debug.LogAssertion(ret == 0);
+
+        ulong duration = LibVideoPlayerExport.player_get_duration();
+        if (!_customTotalTime)
+            _playTotalTime = duration * 1f;
+        Debug.Log("duration: " + duration);
 
         int videoWidth = LibVideoPlayerExport.player_get_width();
         int videoHeight = LibVideoPlayerExport.player_get_height();

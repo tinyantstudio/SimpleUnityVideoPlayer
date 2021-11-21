@@ -23,7 +23,7 @@ public:
 	int renderFrame();
 	void* getFrameBuffer();
 	void freeFrameBuffer(unsigned char* buf);
-	int getCurFrameIndex();
+	unsigned long getDuration();
 
 	int getWidth();
 	int getHeight();

@@ -163,6 +163,15 @@ int simpleVideoPlayer::getHeight()
 	return _pCodecContext->height;
 }
 
+unsigned long simpleVideoPlayer::getDuration()
+{
+	if (!_readyToRenderVideoFrame)
+		return 0;
+	//std::cout << _pFormatContext->duration << std::endl;
+	//std::cout << (_pFormatContext->duration / AV_TIME_BASE) << std::endl;
+	return static_cast<unsigned long>(_pFormatContext->duration / AV_TIME_BASE);
+}
+
 int simpleVideoPlayer::renderFrame()
 {
 	logging("simpleVideoPlayer::renderFrame");
@@ -259,12 +268,13 @@ int simpleVideoPlayer::decodePacket()
 			memcpy(newbuffer + y_size, targetFrame->data[1], y_size / 4);
 			memcpy(newbuffer + y_size + y_size / 4, targetFrame->data[2], y_size / 4);
 
+			// debug save to local file
 			//char filename[1024];
 			//snprintf(filename, sizeof(filename), "%s-full-frame-%d-y.origin", "frame", _pCodecContext->frame_number);
 			//save_bytes_to_file(newbuffer, buffersize, filename);
 			//logging("debug save one frame to local file path: %s", filename);
-
 			// delete[] newbuffer;
+
 			_backBuffer.push_back(newbuffer);
 			std::cout << "buf size: " << _backBuffer.size() << std::endl;
 		}
