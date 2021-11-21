@@ -11,13 +11,15 @@
 // video plyer interface
 extern "C"
 {
-	int VIDEOPLAYERLIB_API enter_test_videoPlayer_static_Lib();
+	VIDEOPLAYERLIB_API int enter_test_videoPlayer_static_Lib();
 
-	void VIDEOPLAYERLIB_API player_init();
-	void VIDEOPLAYERLIB_API player_pause();
-	void VIDEOPLAYERLIB_API player_resume();
-	void VIDEOPLAYERLIB_API player_getInformation();
-	void VIDEOPLAYERLIB_API player_shutdown();
+	VIDEOPLAYERLIB_API int player_init();
+	VIDEOPLAYERLIB_API int player_startPlayVideo(const char* filepath);
+	VIDEOPLAYERLIB_API int player_renderOneFrame();
+	VIDEOPLAYERLIB_API void* player_getOneFrameBuffer();
+	VIDEOPLAYERLIB_API int player_shutdown();
+	VIDEOPLAYERLIB_API int player_get_width();
+	VIDEOPLAYERLIB_API int player_get_height();
 }
 
 #endif

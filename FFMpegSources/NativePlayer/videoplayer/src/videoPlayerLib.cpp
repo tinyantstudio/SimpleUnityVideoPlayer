@@ -53,22 +53,25 @@ static void logging(const char *fmt, ...);
 static int decode_packet(AVPacket *pPacket, AVCodecContext *pCodecContext, AVFrame *pFrame);
 // save bytes to local 
 static void save_bytes_to_file(unsigned char* buf, int size, char *filename);
+static void updateFrame(float deltatime);
+static void init();
+static void mainLoop();
 
 // save to YUV files
-FILE *fp_yuv = NULL;
-AVFrame *frameYUV = NULL;
-struct SwsContext *img_convert_ctx;
+static FILE *fp_yuv = NULL;
+static AVFrame *frameYUV = NULL;
+static struct SwsContext *img_convert_ctx;
 
 // frame buffer to unity
-int _frameBufferSize = 0;
-unsigned char* _frameBuffer = NULL;
+static int _frameBufferSize = 0;
+static unsigned char* _frameBuffer = NULL;
 
 // inter update loop
-std::chrono::steady_clock::time_point _lastUpdate;
-float _deltaTime = 0.0f;
-float _lastInterval = 0.0f;
-int targetFPS = 60;
-float _interval = 0.0f;
+static std::chrono::steady_clock::time_point _lastUpdate;
+static float _deltaTime = 0.0f;
+static float _lastInterval = 0.0f;
+static int targetFPS = 60;
+static float _interval = 0.0f;
 
 // 
 // make engine config
@@ -109,10 +112,15 @@ void mainLoop()
 	}
 }
 
+// 
+//  Test for ffmpeg decode one frame
+//
 int enter_test_videoPlayer_static_Lib()
 {
 	std::cout << "Make ffmpeg exmaple project" << std::endl;
-	std::string mediapath = "E:/Lab/simplevideodemo/FFMpegSources/NativePlayer/build/NativePlayer/Debug/small_bunny_1080p_60fps.mp4";
+	// std::string mediapath = "E:/Lab/simplevideodemo/FFMpegSources/NativePlayer/build/NativePlayer/Debug/small_bunny_1080p_60fps.mp4";
+	std::string mediapath = "G:/KunDev/nativeunity3dplayer-master/simplevideodemo/FFMpegSources/Resources/small_bunny_1080p_60fps.mp4";
+
 	// mediapath = "./../../../../Resources/small_bunny_1080p_60fps.mp4";
 	std::string mark = "\\";
 	//#ifdef _WIN32
@@ -398,6 +406,8 @@ static int decode_packet(AVPacket *pPacket, AVCodecContext *pCodecContext, AVFra
 			std::cout << "use sws_scale convert frame to YUV420 frame data" << endl;
 
 			int y_size = pFrame->width * pFrame->height;
+			int tmpsize = frameYUV->width * pFrame->height;
+			std::cout << "yuv size: " << tmpsize << std::endl;
 
 			fwrite(targetFrame->data[0], 1, y_size, fp_yuv);
 			fwrite(targetFrame->data[1], 1, y_size / 4, fp_yuv);
@@ -408,7 +418,6 @@ static int decode_packet(AVPacket *pPacket, AVCodecContext *pCodecContext, AVFra
 			snprintf(filename, sizeof(filename), "%s-%d-y.origin", "frame", pCodecContext->frame_number);
 			save_bytes_to_file(targetFrame->data[0], y_size, filename);
 			cout << "-> save Y :" << filename << endl;
-
 
 			snprintf(filename, sizeof(filename), "%s-%d-u.origin", "frame", pCodecContext->frame_number);
 			save_bytes_to_file(targetFrame->data[1], y_size / 4, filename);

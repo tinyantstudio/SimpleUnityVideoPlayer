@@ -1,22 +1,41 @@
 #include "videoPlayerExport.h"
+#include "simpleVideoPlayer.h"
 
-void  player_init()
+
+static simpleVideoPlayer m_player;
+
+int player_init()
 {
-
+	return m_player.init();
 }
 
-void player_pause()
+int player_startPlayVideo(const char* filepath)
 {
+	std::string path(filepath);
+	return m_player.startPlayVideo(path);
 }
 
-void player_resume()
+int player_renderOneFrame()
 {
+	return m_player.renderFrame();
 }
 
-void player_getInformation()
+void* player_getOneFrameBuffer()
 {
+	return m_player.getFrameBuffer();
 }
 
-void player_shutdown()
+int player_shutdown()
 {
+	return m_player.shutdown();
+}
+
+int player_get_width()
+{
+	return m_player.getWidth();
+}
+
+int player_get_height()
+{
+	return m_player.getHeight();
 }
