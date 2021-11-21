@@ -47,6 +47,7 @@ int main(int argc, const char *argv[])
 			validframe++;
 			std::cout << "-----> frame data :" << validframe << std::endl;
 		}
+		player_getOneFrameBuffer_Done(buf);
 	}
 	ret = player_shutdown();
 	assert(ret == 0);

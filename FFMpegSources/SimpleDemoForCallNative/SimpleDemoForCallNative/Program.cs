@@ -26,6 +26,10 @@ namespace SimpleDemoForCallNative
         public static extern int player_renderOneFrame();
         [DllImport("videoPlayerLib")]
         public static extern IntPtr player_getOneFrameBuffer();
+
+        // we need to frame buffer data alloc in native C++
+        [DllImport("videoPlayerLib")]
+        public static extern void player_getOneFrameBuffer_Done(IntPtr data);
         [DllImport("videoPlayerLib")]
         public static extern int player_shutdown();
         [DllImport("videoPlayerLib")]
@@ -218,7 +222,7 @@ namespace SimpleDemoForCallNative
                     Buffer.BlockCopy(targetbuf, ybufsize + ubufsize, vbuff, 0, vbufsize);
                     SaveFileToLocal(vbuff, $"{frame}-v.file", path);
                 }
-
+                LibVideoPlayerExport.player_getOneFrameBuffer_Done(buf);
                 frame--;
             }
 

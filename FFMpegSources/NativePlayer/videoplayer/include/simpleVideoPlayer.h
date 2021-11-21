@@ -22,6 +22,7 @@ public:
 	int startPlayVideo(std::string filepath);
 	int renderFrame();
 	void* getFrameBuffer();
+	void freeFrameBuffer(unsigned char* buf);
 	int getCurFrameIndex();
 
 	int getWidth();

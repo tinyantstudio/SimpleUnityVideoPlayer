@@ -17,6 +17,7 @@ extern "C"
 	VIDEOPLAYERLIB_API int player_startPlayVideo(const char* filepath);
 	VIDEOPLAYERLIB_API int player_renderOneFrame();
 	VIDEOPLAYERLIB_API void* player_getOneFrameBuffer();
+	VIDEOPLAYERLIB_API void player_getOneFrameBuffer_Done(unsigned char* buf);
 	VIDEOPLAYERLIB_API int player_shutdown();
 	VIDEOPLAYERLIB_API int player_get_width();
 	VIDEOPLAYERLIB_API int player_get_height();

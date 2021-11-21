@@ -287,7 +287,10 @@ void* simpleVideoPlayer::getFrameBuffer()
 	return NULL;
 }
 
-int simpleVideoPlayer::getCurFrameIndex()
+void simpleVideoPlayer::freeFrameBuffer(unsigned char* buf)
 {
-	return _currentFrame;
+	if (buf != NULL)
+	{
+		delete[] buf;
+	}
 }

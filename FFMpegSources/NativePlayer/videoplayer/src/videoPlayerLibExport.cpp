@@ -25,6 +25,11 @@ void* player_getOneFrameBuffer()
 	return m_player.getFrameBuffer();
 }
 
+void player_getOneFrameBuffer_Done(unsigned char* buf)
+{
+	m_player.freeFrameBuffer(buf);
+}
+
 int player_shutdown()
 {
 	return m_player.shutdown();
