@@ -63,9 +63,9 @@ Shader "CustomVideoShader/I420toRGB" {
 			fixed4 frag(v2f i) : SV_Target
 			{
 				float y,u,v;
-				y = tex2D(_MainTex, float2(i.y.x * available_scale_y, 1 - i.y.y)).a;
-				u = tex2D(_UTex, float2(i.u.x * available_scale_uv, 1 - i.u.y)).a;
-				v = tex2D(_VTex, float2(i.v.x * available_scale_uv, 1 - i.v.y)).a;
+				y = tex2D(_MainTex, float2(i.y.x * available_scale_y, 1 - i.y.y)).r;
+				u = tex2D(_UTex, float2(i.u.x * available_scale_uv, 1 - i.u.y)).r;
+				v = tex2D(_VTex, float2(i.v.x * available_scale_uv, 1 - i.v.y)).r;
 				fixed4 yuv = fixed4(y, u, v, 1.0) - fixed4(0.0627, 0.5, 0.5, 0);
 				fixed4 rgba = mul(yuv, _YUVMat);
 				return fixed4(rgba.rgb, 1.0);
