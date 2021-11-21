@@ -61,3 +61,7 @@ crashlytics-build.properties
 /FFMpegSources/ffmpeglib-win
 /FFMpegSources/ffmpeg-libav-tutorial-1.0.0
 /FFMpegSources/NativePlayer/build
+/FFMpegSources/debugoutput
+/FFMpegSources/SimpleDemoForCallNative/SimpleDemoForCallNative/bin
+/FFMpegSources/SimpleDemoForCallNative/SimpleDemoForCallNative/dll
+/FFMpegSources/SimpleDemoForCallNative/SimpleDemoForCallNative/obj
