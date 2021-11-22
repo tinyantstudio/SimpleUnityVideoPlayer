@@ -154,7 +154,7 @@ MonoBehaviour:
   _playTotalTime: 10
   _customTotalTime: 0
   _curPlayTime: 0
-  _playFPS: 60
+  _playFPS: 30
   _CurFrameCount: 0
   _targetRawImageToShowFrame: {fileID: 1167607178}
   mBlitYUVToRGBMat: {fileID: 2100000, guid: 072b2065d9f388244ab69afc451d1bdc, type: 2}

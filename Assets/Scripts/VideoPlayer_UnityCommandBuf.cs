@@ -66,6 +66,12 @@ public class VideoPlayer_UnityCommandBuf : SimpleVideoPlayer
             _command.IssuePluginCustomTextureUpdateV2(callBack,
                 mVTexture, (uint)2);
 
+            // IssuePluginCustomTextureUpdateV2 command can't be Async just be sync!!!
+            // so it will block GPU if command time comsuming!!!
+            // so don't push so hard like [4K 60fps]!!!
+            // this.ValidateAgainstExecutionFlags(CommandBufferExecutionFlags.None, CommandBufferExecutionFlags.AsyncCompute);
+           
+            // Graphics.ExecuteCommandBufferAsync(_command, ComputeQueueType.Background);
             Graphics.ExecuteCommandBuffer(_command);
             _command.Clear();
             // Debug.Log("render frame...");
