@@ -193,7 +193,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87f44a7cc1bcb4f4e9a5b18a51d7dfaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mediaPath: G:/KunDev/nativeunity3dplayer-master/simplevideodemo/FFMpegSources/Resources/big_bunny_1080p_60fps_30s.mp4
+  mediaPath: E:\Lab\simplevideodemo\FFMpegSources\Resources\big_bunny_1080p_60fps_30s.mp4
   _playTotalTime: 10
   _customTotalTime: 0
   _curPlayTime: 0

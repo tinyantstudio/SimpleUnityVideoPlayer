@@ -20,18 +20,60 @@ public class SimpleVideoPlayer : MonoBehaviour
     public Material mBlitYUVToRGBMat;
     private RenderTexture _renderTexture;
 
-
     // YUV texture
     // the right and effective way is just create texture one time and udpate the texture data
     private Texture2D mYTexture;
     private Texture2D mUTexture;
     private Texture2D mVTexture;
 
+    private int _texYWidth;
+    private int _texYHeight;
+    private int _texUVWidth;
+    private int _texUVHeight;
+
+    public enum TEX_YUV_TYPE
+    {
+        Y,
+        U,
+        V
+    }
+
     private string TAG = "SimpleVideoPlayer";
 
     void Start()
     {
         StartCoroutine(_StartPlayVideo());
+    }
+
+    private void CreateTexture(TEX_YUV_TYPE type, int width, int height)
+    {
+        switch (type)
+        {
+            case TEX_YUV_TYPE.Y:
+                if (mYTexture == null || (mYTexture.width * mYTexture.height) != (width * height))
+                {
+                    if (mYTexture != null)
+                        Object.DestroyImmediate(mYTexture);
+                    mYTexture = new Texture2D(width, height, TextureFormat.R8, false);
+                }
+
+                break;
+            case TEX_YUV_TYPE.U:
+            case TEX_YUV_TYPE.V:
+                Texture2D target = type == TEX_YUV_TYPE.U ? mUTexture : mVTexture;
+                if (target == null || (target.width * target.height) != (width * height))
+                {
+                    if (target != null)
+                        Object.DestroyImmediate(target);
+                    target = new Texture2D(width, height, TextureFormat.R8, false);
+                    if (type == TEX_YUV_TYPE.U) mUTexture = target;
+                    else mVTexture = target;
+                }
+
+                break;
+            default:
+                break;
+        }
     }
 
     void SetUpMatrix()
@@ -76,11 +118,27 @@ public class SimpleVideoPlayer : MonoBehaviour
 
         int videoWidth = LibVideoPlayerExport.player_get_width();
         int videoHeight = LibVideoPlayerExport.player_get_height();
+
+        _texYWidth = videoWidth;
+        _texYHeight = videoHeight;
+
+        _texUVWidth = videoWidth / 2;
+        _texUVHeight = videoHeight / 2;
+
         CreateRenderTexture(videoWidth, videoHeight);
 
-        int totalBuffSize = (int) (videoWidth * videoHeight * 1.5f);
+        int totalBuffSize = (int)(videoWidth * videoHeight * 1.5f);
 
         SimpleDebuger.LogInfo(TAG, "video width: " + videoWidth + ",height: " + videoHeight);
+
+        int ybufsize = videoHeight * videoWidth;
+        int ubufsize = videoHeight * videoWidth / 4;
+        int vbufsize = videoHeight * videoWidth / 4;
+        // create YUV texture buffer
+        byte[] targetbuf = new byte[totalBuffSize];
+        byte[] ybuff = new byte[ybufsize];
+        byte[] ubuff = new byte[ubufsize];
+        byte[] vbuff = new byte[vbufsize];
 
         while (_curPlayTime < _playTotalTime)
         {
@@ -91,7 +149,6 @@ public class SimpleVideoPlayer : MonoBehaviour
             }
             else
             {
-                // SimpleDebuger.LogInfo(TAG, "render frame: " + testframecount + ",success");
                 IntPtr buffptr = LibVideoPlayerExport.player_getOneFrameBuffer();
                 if (buffptr == IntPtr.Zero)
                 {
@@ -100,38 +157,52 @@ public class SimpleVideoPlayer : MonoBehaviour
                 }
                 else
                 {
-                    // just copy from intptr buffer data no need to create a new byte array
-                    byte[] targetbuf = new byte[totalBuffSize];
+                    // just copy frame native array
                     Marshal.Copy(buffptr, targetbuf, 0, totalBuffSize);
-
-                    int ybufsize = videoHeight * videoWidth;
-                    int ubufsize = videoHeight * videoWidth / 4;
-                    int vbufsize = videoHeight * videoWidth / 4;
-
-                    byte[] ybuff = new byte[ybufsize];
                     Buffer.BlockCopy(targetbuf, 0, ybuff, 0, ybufsize);
-
-                    byte[] ubuff = new byte[ubufsize];
                     Buffer.BlockCopy(targetbuf, ybufsize, ubuff, 0, ubufsize);
-
-                    byte[] vbuff = new byte[vbufsize];
                     Buffer.BlockCopy(targetbuf, ybufsize + ubufsize, vbuff, 0, vbufsize);
+                    
+                    
+                    //
+                    // 1 way---->. every frame to create new texture2d with input buffer by LoadRawTextureData
+                    //
+                    // if (mYTexture != null)
+                    //     Object.DestroyImmediate(mYTexture);
+                    // if (mUTexture != null)
+                    //     Object.DestroyImmediate(mUTexture);
+                    // if (mVTexture != null)
+                    //     Object.DestroyImmediate(mVTexture);
 
-                    if (mYTexture != null)
-                        Object.DestroyImmediate(mYTexture);
-                    if (mUTexture != null)
-                        Object.DestroyImmediate(mUTexture);
-                    if (mVTexture != null)
-                        Object.DestroyImmediate(mVTexture);
+                    // mYTexture = new Texture2D(videoWidth, videoHeight, TextureFormat.R8, false);
+                    // mUTexture = new Texture2D(videoWidth / 2, videoHeight / 2, TextureFormat.R8, false);
+                    // mVTexture = new Texture2D(videoWidth / 2, videoHeight / 2, TextureFormat.R8, false);
+                    //
+                    // mYTexture.LoadRawTextureData(ybuff);
+                    // mUTexture.LoadRawTextureData(ubuff);
+                    // mVTexture.LoadRawTextureData(vbuff);
+                    //
 
-                    mYTexture = new Texture2D(videoWidth, videoHeight, TextureFormat.R8, false);
-                    mUTexture = new Texture2D(videoWidth / 2, videoHeight / 2, TextureFormat.R8, false);
-                    mVTexture = new Texture2D(videoWidth / 2, videoHeight / 2, TextureFormat.R8, false);
+                    //
+                    // 2 way. everty frame not to create new texture2d,just using SetPixelData to update texture2d's data
+                    //
+                    CreateTexture(TEX_YUV_TYPE.Y, _texYWidth, _texYHeight);
+                    CreateTexture(TEX_YUV_TYPE.U, _texUVWidth, _texUVHeight);
+                    CreateTexture(TEX_YUV_TYPE.V, _texUVWidth, _texUVHeight);
 
-                    mYTexture.LoadRawTextureData(ybuff);
-                    mUTexture.LoadRawTextureData(ubuff);
-                    mVTexture.LoadRawTextureData(vbuff);
+                    if (mUTexture == null || mYTexture == null || mVTexture == null)
+                    {
+                        SimpleDebuger.LogInfo(TAG, "YUV texture is not valid...");
+                        continue;
+                    }
 
+                    mYTexture.SetPixelData(ybuff, 0, 0);
+                    mUTexture.SetPixelData(ubuff, 0, 0);
+                    mVTexture.SetPixelData(vbuff, 0, 0);
+
+                    // Call Apply after setting image data to actually upload it to the GPU.
+                    // Apply texture to GPU
+                    // this will be time-consuming
                     mYTexture.Apply(false);
                     mUTexture.Apply(false);
                     mVTexture.Apply(false);

@@ -12,7 +12,8 @@ else()
 endif()
 
 file(GLOB PROJECT_SOURCES src/*.cpp)
-file(GLOB PROJECT_HEADERS include/*.h)
+file(GLOB PROJECT_HEADERS include/*.h
+         ../unityplugin/*.h)
 
 source_group("Sources" FILES ${PROJECT_SOURCES})
 source_group("Headers" FILES ${PROJECT_HEADERS})
