@@ -18,12 +18,18 @@ class simpleVideoPlayer
 public:
 	simpleVideoPlayer();
 	int init();
+	void setconfig(bool splityuv);
 	int shutdown();
 	int startPlayVideo(std::string filepath);
 	int renderFrame();
 	void* getFrameBuffer();
 	void freeFrameBuffer(unsigned char* buf);
 	unsigned long getDuration();
+
+	// if split y,u,v buffer
+	void* getYBuffer();
+	void* getUBuffer();
+	void* getVBuffer();
 
 	int getWidth();
 	int getHeight();
@@ -55,13 +61,19 @@ private:
 		fwrite(buf, 1, size, f);
 		fclose(f);
 	}
-
 private:
 	int _currentFrame;
 	int _video_stream_index;
 	bool _hasInitSuc;
 	bool _readyToRenderVideoFrame;
-	std::deque<unsigned char*> _backBuffer;
+	// if we split yuv to single buffer
+	bool _splitYUVBuffer;
+	std::deque<unsigned char*> _frameBufferQueue;
+	// 0,1,2 -> y,u,v if split
+	std::deque<unsigned char*> _yBufferQueue;
+	std::deque<unsigned char*> _uBufferQueue;
+	std::deque<unsigned char*> _vBufferQueue;
+	void* pop_buffer(std::deque<unsigned char*>& queue);
 private:
 	AVFrame* _pFrameYUV;
 	AVFrame* _pOriginFrame;

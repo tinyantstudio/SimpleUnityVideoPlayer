@@ -1,7 +1,5 @@
 #include "simpleVideoPlayer.h"
 
-
-
 simpleVideoPlayer::simpleVideoPlayer() :
 	_pFormatContext(NULL),
 	_hasInitSuc(false),
@@ -12,12 +10,29 @@ simpleVideoPlayer::simpleVideoPlayer() :
 	_img_convert_ctx(NULL),
 	_pCodec(NULL),
 	_pCodecParameters(NULL),
-	_readyToRenderVideoFrame(false)
+	_readyToRenderVideoFrame(false),
+	_splitYUVBuffer(false)
 {
+	logging("simpleVideoPlayer::simpleVideoPlayer()");
+}
+
+void release_buffer(std::deque<unsigned char*>& buf)
+{
+	size_t size = buf.size();
+	for (size_t i = 0; i < size; i++)
+	{
+		delete[](buf[i]);
+	}
+	buf.clear();
 }
 
 int simpleVideoPlayer::init()
 {
+	_hasInitSuc = false;
+	_splitYUVBuffer = false;
+	_video_stream_index = -1;
+	_currentFrame = 0;
+
 	logging("simpleVideoPlayer::init");
 	_pFormatContext = avformat_alloc_context();
 	if (!_pFormatContext) {
@@ -26,20 +41,47 @@ int simpleVideoPlayer::init()
 		return -1;
 	}
 	_hasInitSuc = true;
+	logging("simpleVideoPlayer::init queue size: %zu", _yBufferQueue.size());
+	_yBufferQueue.clear();
+	_uBufferQueue.clear();
+	_vBufferQueue.clear();
+	logging("simpleVideoPlayer::init debug:_video_stream_index: %d", _video_stream_index);
+	logging("simpleVideoPlayer::init debug:_currentFrame: %d", _currentFrame);
 	return 0;
 }
+
+void simpleVideoPlayer::setconfig(bool splityuv)
+{
+	_splitYUVBuffer = splityuv;
+}
+
 int simpleVideoPlayer::shutdown()
 {
 	logging("simpleVideoPlayer::shutdown()");
-
 	if (!_hasInitSuc)
-		return  -1;
-	sws_freeContext(_img_convert_ctx);
-	avformat_close_input(&_pFormatContext);
-	av_packet_free(&_pPacket);
-	av_frame_free(&_pOriginFrame);
-	av_frame_free(&_pFrameYUV);
-	avcodec_free_context(&_pCodecContext);
+		return -1;
+	_hasInitSuc = false;
+	_splitYUVBuffer = false;
+	_video_stream_index = -1;
+	_currentFrame = 0;
+	// we need to clear buffer
+	release_buffer(_yBufferQueue);
+	release_buffer(_uBufferQueue);
+	release_buffer(_vBufferQueue);
+
+	if (_img_convert_ctx != NULL) sws_freeContext(_img_convert_ctx);
+	if (_pFormatContext != NULL) avformat_close_input(&_pFormatContext);
+	if (_pPacket != NULL) av_packet_free(&_pPacket);
+	if (_pOriginFrame != NULL) av_frame_free(&_pOriginFrame);
+	if (_pFrameYUV != NULL) av_frame_free(&_pFrameYUV);
+	if (_pCodecContext != NULL) avcodec_free_context(&_pCodecContext);
+
+	_img_convert_ctx = NULL;
+	_pFormatContext = NULL;
+	_pPacket = NULL;
+	_pOriginFrame = NULL;
+	_pFrameYUV = NULL;
+	_pCodecContext = NULL;
 	return 0;
 }
 
@@ -106,6 +148,13 @@ int simpleVideoPlayer::startPlayVideo(std::string filepath)
 		logging("failed to copy codec params to codec context");
 		return -1;
 	}
+
+	// if we using multi threading decode
+	_pCodecContext->thread_count = 10;
+	// in my pc without multi-threading decode one frame need 16-20ms 4K(3840*2160)
+	// thread_count = 10,decode one frame need 5ms-8ms
+	// PC config: i7-8700 CPU @ 3.20GHZ,32GB RAM,x64
+
 	// Initialize the AVCodecContext to use the given AVCodec.
 	if (avcodec_open2(_pCodecContext, _pCodec, NULL) < 0)
 	{
@@ -167,8 +216,6 @@ unsigned long simpleVideoPlayer::getDuration()
 {
 	if (!_readyToRenderVideoFrame)
 		return 0;
-	//std::cout << _pFormatContext->duration << std::endl;
-	//std::cout << (_pFormatContext->duration / AV_TIME_BASE) << std::endl;
 	return static_cast<unsigned long>(_pFormatContext->duration / AV_TIME_BASE);
 }
 
@@ -262,39 +309,81 @@ int simpleVideoPlayer::decodePacket()
 			int y_size = _pOriginFrame->width * _pOriginFrame->height;
 			logging("decode one video frame success and save to buffer container size: %d", y_size);
 
-			int buffersize = y_size + y_size / 2;
-			unsigned char* newbuffer = new unsigned char[buffersize];
-			memcpy(newbuffer, targetFrame->data[0], y_size);
-			memcpy(newbuffer + y_size, targetFrame->data[1], y_size / 4);
-			memcpy(newbuffer + y_size + y_size / 4, targetFrame->data[2], y_size / 4);
+			if (!_splitYUVBuffer)
+			{
+				int buffersize = y_size + y_size / 2;
+				unsigned char* newbuffer = new unsigned char[buffersize];
+				memcpy(newbuffer, targetFrame->data[0], y_size);
+				memcpy(newbuffer + y_size, targetFrame->data[1], y_size / 4);
+				memcpy(newbuffer + y_size + y_size / 4, targetFrame->data[2], y_size / 4);
+				_frameBufferQueue.push_back(newbuffer);
+			}
+			else
+			{
+				// just push Y buffer
+				int uvsize = y_size / 4;
+
+				unsigned char* ybuffer = new unsigned char[y_size];
+				memcpy(ybuffer, targetFrame->data[0], y_size);
+
+				unsigned char* ubuffer = new unsigned char[uvsize];
+				memcpy(ubuffer, targetFrame->data[1], uvsize);
+
+				unsigned char* vbuffer = new unsigned char[uvsize];
+				memcpy(vbuffer, targetFrame->data[2], uvsize);
+
+				_yBufferQueue.push_back(ybuffer);
+				_uBufferQueue.push_back(ubuffer);
+				_vBufferQueue.push_back(vbuffer);
+			}
 
 			// debug save to local file
 			//char filename[1024];
 			//snprintf(filename, sizeof(filename), "%s-full-frame-%d-y.origin", "frame", _pCodecContext->frame_number);
-			//save_bytes_to_file(newbuffer, buffersize, filename);
+			//save_bytes_to_file(ybuffer, y_size, filename);
 			//logging("debug save one frame to local file path: %s", filename);
 			// delete[] newbuffer;
-
-			_backBuffer.push_back(newbuffer);
-			std::cout << "buf size: " << _backBuffer.size() << std::endl;
 		}
-		else {
+		else
+		{
 			std::cout << "respone code:  " << response << std::endl;
 		}
 	}
 	return 0;
 }
 
-// TODO need to release the buffer on caller side
-void* simpleVideoPlayer::getFrameBuffer()
+void* simpleVideoPlayer::pop_buffer(std::deque<unsigned char*>& queue)
 {
-	if (_backBuffer.size() > 0)
+	if (queue.size() > 0)
 	{
-		unsigned char* buf = _backBuffer.front();
-		_backBuffer.pop_front();
+		unsigned char* buf = queue.front();
+		queue.pop_front();
 		return buf;
 	}
 	return NULL;
+}
+
+// need to release the buffer on caller side
+void* simpleVideoPlayer::getFrameBuffer()
+{
+	return pop_buffer(_frameBufferQueue);
+}
+
+// need call three times
+// 0,1,2  3,4,5  6,7,8
+void* simpleVideoPlayer::getYBuffer()
+{
+	return pop_buffer(_yBufferQueue);
+}
+
+void* simpleVideoPlayer::getUBuffer()
+{
+	return pop_buffer(_uBufferQueue);
+}
+
+void* simpleVideoPlayer::getVBuffer()
+{
+	return pop_buffer(_vBufferQueue);
 }
 
 void simpleVideoPlayer::freeFrameBuffer(unsigned char* buf)

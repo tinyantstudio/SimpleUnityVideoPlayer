@@ -36,4 +36,10 @@ public class LibVideoPlayerExport
 
     [DllImport("videoPlayerLib")]
     public static extern ulong player_get_duration();
+
+    [DllImport("videoPlayerLib")]
+    public static extern void player_setconfig([MarshalAs(UnmanagedType.Bool)] bool splityuv);
+
+    [DllImport("videoPlayerLib")]
+    public static extern System.IntPtr get_texture_callback_yuv_plane();
 }

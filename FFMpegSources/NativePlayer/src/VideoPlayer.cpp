@@ -3,6 +3,10 @@
 #include "chatEngineExport.h"
 #include <assert.h>
 
+// use for measure time consuming
+#include <chrono>
+using namespace std::chrono;
+
 //
 // Test for videoPlayer
 //
@@ -27,16 +31,17 @@ int main(int argc, const char *argv[])
 	ret = player_init();
 	std::cout << "ret: " << ret << endl;
 	assert(ret == 0);
-	std::string mediapath = "G:/KunDev/nativeunity3dplayer-master/simplevideodemo/FFMpegSources/Resources/small_bunny_1080p_60fps.mp4";
-	ret = player_startPlayVideo(mediapath.c_str());
+	std::string mediapath = "E:/Lab/simplevideodemo/FFMpegSources/Resources/small_bunny_1080p_60fps.mp4";
+	// std::string mediapath = "E:/Lab/simplevideodemo/FFMpegSources/Resources/big_buck_4K_big.mp4";
+	ret = player_startPlayVideo(mediapath.c_str()); 
 	assert(ret == 0);
 
-	int width = player_get_width();
+	int width = player_get_width(); 
 	int height = player_get_height();
 
 	std::cout << "Video Width: " << width << ", Height: " << height << std::endl;
 	std::cout << "Video duration: " << player_get_duration() << endl;
-	int framecount = 10;
+	int framecount = 40;
 	int validframe = 0;
 	while (framecount-- >= 0)
 	{

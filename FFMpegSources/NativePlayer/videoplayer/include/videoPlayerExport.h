@@ -1,6 +1,8 @@
 #ifndef VIDEOPLAYER_EXPORT_H
 #define VIDEOPLAYER_EXPORT_H
 
+#include "IUnityGraphics.h"
+
 #ifdef VIDEOPLAYERLIB_EXPORTS
 #define VIDEOPLAYERLIB_API __declspec(dllexport)
 #else
@@ -23,7 +25,15 @@ extern "C"
 	VIDEOPLAYERLIB_API int player_get_height();
 	VIDEOPLAYERLIB_API unsigned long player_get_duration();
 
-	// using unity3d to refresh texture
+	VIDEOPLAYERLIB_API void player_setconfig(bool splityuv);
+
+	// using unity command buffer
+	VIDEOPLAYERLIB_API void* player_get_y_buffer();
+	VIDEOPLAYERLIB_API void* player_get_u_buffer();
+	VIDEOPLAYERLIB_API void* player_get_v_buffer();
 }
+
+// using unity3d texture updating event (Y,UV texture data)
+extern "C" UnityRenderingEventAndData UNITY_INTERFACE_EXPORT get_texture_callback_yuv_plane();
 
 #endif

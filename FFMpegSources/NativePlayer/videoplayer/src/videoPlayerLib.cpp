@@ -23,7 +23,6 @@ using namespace std;
 
 // learn to media program
 // 1. https://github.com/leandromoreira/ffmpeg-libav-tutorial#video---what-you-see
-// 2. 
 
 /*
  * http://ffmpeg.org/doxygen/trunk/index.html
@@ -39,12 +38,16 @@ using namespace std;
  */
 
 
+//
+// Example for decode video frame with ffmpeg lib
+// 
+
  // https://stackoverflow.com/questions/1041866/what-is-the-effect-of-extern-c-in-c
 extern "C" {
 #include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>
 #include <libswscale/swscale.h>
-#include <libavutil/imgutils.h>
+#include <libavutil/imgutils.h> 
 };
 
 // print out the steps and errors

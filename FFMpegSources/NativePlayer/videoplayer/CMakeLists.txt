@@ -12,18 +12,19 @@ else()
 endif()
 
 file(GLOB PROJECT_SOURCES src/*.cpp)
-file(GLOB PROJECT_HEADERS include/*.h
-         ../unityplugin/*.h)
+file(GLOB PROJECT_HEADERS include/*.h)
+file(GLOB PROJECT_UNITY ../Unity/*.h)
 
 source_group("Sources" FILES ${PROJECT_SOURCES})
 source_group("Headers" FILES ${PROJECT_HEADERS})
+source_group("Unity" FILES ${PROJECT_UNITY})
 
 # include_directories(../../ffmpeglib-win/include)
 link_directories("../../ffmpeglib-win/lib")
 
 message("videoPlayerLib  --> ${PROJECT_NAME}")
 
-add_library(${PROJECT_NAME} SHARED ${PROJECT_SOURCES} ${PROJECT_HEADERS})
+add_library(${PROJECT_NAME} SHARED ${PROJECT_SOURCES} ${PROJECT_HEADERS} ${PROJECT_UNITY})
 
 target_link_libraries(${PROJECT_NAME} avcodec avdevice avformat swscale avutil)
 

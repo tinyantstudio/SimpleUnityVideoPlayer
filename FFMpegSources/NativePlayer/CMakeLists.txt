@@ -20,6 +20,7 @@ source_group("Headers" FILES ${PROJECT_HEADERS})
 include_directories(../ffmpeglib-win/include)
 link_directories("../ffmpeglib-win/lib")
 
+include_directories(Unity)
 include_directories(videoplayer/include)
 include_directories(chatengine/include)
 
