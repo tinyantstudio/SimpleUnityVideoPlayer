@@ -27,9 +27,9 @@ public:
 	unsigned long getDuration();
 
 	// if split y,u,v buffer
-	void* get_pop_YBuffer();
-	void* get_pop_UBuffer();
-	void* get_pop_VBuffer();
+	void* get_pop_yBuffer();
+	void* get_pop_uBuffer();
+	void* get_pop_vBuffer();
 
 	void* get_peek_yBuffer();
 	void* get_peek_uBuffer();

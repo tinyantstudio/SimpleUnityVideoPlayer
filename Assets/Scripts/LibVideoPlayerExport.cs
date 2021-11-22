@@ -45,11 +45,20 @@ public class LibVideoPlayerExport
 
     // for debug get YUV buffer
     [DllImport("videoPlayerLib")]
-    public static extern IntPtr player_get_y_buffer();
+    public static extern IntPtr player_peek_y_buffer();
 
     [DllImport("videoPlayerLib")]
-    public static extern IntPtr player_get_u_buffer();
+    public static extern IntPtr player_peek_u_buffer();
 
     [DllImport("videoPlayerLib")]
-    public static extern IntPtr player_get_v_buffer();
+    public static extern IntPtr player_peek_v_buffer();
+
+    [DllImport("videoPlayerLib")]
+    public static extern IntPtr player_get_pop_y_buffer();
+
+    [DllImport("videoPlayerLib")]
+    public static extern IntPtr player_get_pop_u_buffer();
+
+    [DllImport("videoPlayerLib")]
+    public static extern IntPtr player_get_pop_v_buffer();
 }

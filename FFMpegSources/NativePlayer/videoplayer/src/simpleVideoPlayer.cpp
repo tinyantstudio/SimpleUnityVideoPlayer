@@ -195,6 +195,7 @@ int simpleVideoPlayer::startPlayVideo(std::string filepath)
 	_readyToRenderVideoFrame = true;
 
 	logging("video width: %d,height: %d", _pCodecContext->width, _pCodecContext->height);
+	std::cout << "video decode fmt: " <<_pCodecContext->pix_fmt << std::endl;
 	return 0;
 }
 
@@ -233,6 +234,7 @@ int simpleVideoPlayer::renderFrame()
 	{
 		if (_pPacket->stream_index == _video_stream_index)
 		{
+			logging("video frame...");
 			logging("AVPacket->pts %" PRId64, _pPacket->pts);
 			response = decodePacket();
 			if (response < 0)

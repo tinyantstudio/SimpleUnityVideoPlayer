@@ -73,7 +73,7 @@ public class SimpleVideoPlayer : MonoBehaviour
                 {
                     if (mYTexture != null)
                         Object.DestroyImmediate(mYTexture);
-                    mYTexture = new Texture2D(width, height, TextureFormat.R8, false);
+                    mYTexture = new Texture2D(width, height, TextureFormat.RGBA32, false);
                 }
 
                 break;

@@ -58,17 +58,17 @@ unsigned long player_get_duration()
 	return m_player.getDuration();
 }
 
-void* player_get_peek_y_buffer()
+void* player_peek_y_buffer()
 {
 	return m_player.get_peek_yBuffer();
 }
 
-void* player_get_peek_u_buffer()
+void* player_peek_u_buffer()
 {
 	return m_player.get_peek_uBuffer();
 }
 
-void* player_get_peek_v_buffer()
+void* player_peek_v_buffer()
 {
 	return m_player.get_peek_vBuffer();
 }
@@ -133,25 +133,28 @@ void unity_texture_update_callback(int eventID, void* data)
 		// UpdateTextureBegin: Generate and return texture image data.
 		UnityRenderingExtTextureUpdateParamsV2 *params = (UnityRenderingExtTextureUpdateParamsV2 *)data;
 		unsigned int planeType = params->userData;
-
 		void* framedata = NULL;
-
 		// y -> 0
 		// u -> 1
 		// v -> 2
+		std::cout << "unity_texture_update_callback type: " << planeType << std::endl;
 		if (planeType == 0)
 		{
-			framedata = player_get_y_buffer();
+			framedata = player_peek_y_buffer();
 		}
 		else if (planeType == 1)
 		{
-			framedata = player_get_u_buffer();
+			framedata = player_peek_u_buffer();
 		}
 		else if (planeType == 2)
 		{
-			framedata = player_get_v_buffer();
+			framedata = player_peek_v_buffer();
 		}
-		params->texData = (unsigned char*)framedata;
+		if (framedata != NULL)
+		{
+			std::cout << "frame data is not null..." << std::endl;
+		}
+		params->texData = framedata;
 
 	}
 	else if (eventID == kUnityRenderingExtEventUpdateTextureEndV2)

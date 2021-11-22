@@ -74,31 +74,45 @@ public class VideoPlayer_UnityCommandBuf : SimpleVideoPlayer
             //     mUTexture, (uint)1);
             // _command.IssuePluginCustomTextureUpdateV2(callBack,
             //     mVTexture, (uint)2);
-            // int ret = LibVideoPlayerExport.player_renderOneFrame();
-            // if (ret == 0)
-            // {
-            //     IntPtr yptr = LibVideoPlayerExport.player_get_y_buffer();
-            //     IntPtr uptr = LibVideoPlayerExport.player_get_u_buffer();
-            //     IntPtr vptr = LibVideoPlayerExport.player_get_v_buffer();
-            //
-            //     if (yptr != IntPtr.Zero && uptr != IntPtr.Zero && vptr != IntPtr.Zero)
-            //     {
-            //         Marshal.Copy(yptr, ybuff, 0, ybufsize);
-            //         Marshal.Copy(uptr, ubuff, 0, ubufsize);
-            //         Marshal.Copy(vptr, vbuff, 0, vbufsize);
-            //
-            //         mYTexture.SetPixelData(ybuff, 0, 0);
-            //         mUTexture.SetPixelData(ubuff, 0, 0);
-            //         mVTexture.SetPixelData(vbuff, 0, 0);
-            //
-            //         mYTexture.Apply(false);
-            //         mUTexture.Apply(false);
-            //         mVTexture.Apply(false);
-            //
-            //         RenderVideoFrameBlit();
-            //         Debug.Log("render one frame...");
-            //     }
-            // }
+            int ret = LibVideoPlayerExport.player_renderOneFrame();
+            if (ret == 0)
+            {
+                IntPtr yptr = LibVideoPlayerExport.player_peek_y_buffer();
+                IntPtr uptr = LibVideoPlayerExport.player_peek_u_buffer();
+                IntPtr vptr = LibVideoPlayerExport.player_peek_v_buffer();
+
+                if (yptr != IntPtr.Zero && uptr != IntPtr.Zero && vptr != IntPtr.Zero)
+                {
+                    // Marshal.Copy(yptr, ybuff, 0, ybufsize);
+                    // Marshal.Copy(uptr, ubuff, 0, ubufsize);
+                    // Marshal.Copy(vptr, vbuff, 0, vbufsize);
+                    //
+                    // mYTexture.SetPixelData(ybuff, 0, 0);
+                    // mUTexture.SetPixelData(ubuff, 0, 0);
+                    // mVTexture.SetPixelData(vbuff, 0, 0);
+                    //
+                    // mYTexture.Apply(false);
+                    // mUTexture.Apply(false);
+                    // mVTexture.Apply(false);
+                    
+                    _command.IssuePluginCustomTextureUpdateV2(callBack,
+                        mYTexture, (uint)0);
+                    
+                    // _command.IssuePluginCustomTextureUpdateV2(callBack, 
+                    //     mUTexture, (uint)1);
+                    // _command.IssuePluginCustomTextureUpdateV2(callBack,
+                    //     mVTexture, (uint)2);
+                    Graphics.ExecuteCommandBuffer(_command);
+                    _command.Clear();
+
+                    RenderVideoFrameBlit();
+                    Debug.Log("render one frame...");
+                }
+
+                LibVideoPlayerExport.player_get_pop_y_buffer();
+                LibVideoPlayerExport.player_get_pop_u_buffer();
+                LibVideoPlayerExport.player_get_pop_v_buffer();
+            }
 
             // IssuePluginCustomTextureUpdateV2 command can't be Async just be sync!!!
             // so it will block GPU if command time comsuming!!!
