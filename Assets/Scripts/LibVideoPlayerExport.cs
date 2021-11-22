@@ -42,4 +42,14 @@ public class LibVideoPlayerExport
 
     [DllImport("videoPlayerLib")]
     public static extern System.IntPtr get_texture_callback_yuv_plane();
+
+    // for debug get YUV buffer
+    [DllImport("videoPlayerLib")]
+    public static extern IntPtr player_get_y_buffer();
+
+    [DllImport("videoPlayerLib")]
+    public static extern IntPtr player_get_u_buffer();
+
+    [DllImport("videoPlayerLib")]
+    public static extern IntPtr player_get_v_buffer();
 }

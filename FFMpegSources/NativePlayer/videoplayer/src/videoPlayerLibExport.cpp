@@ -58,19 +58,34 @@ unsigned long player_get_duration()
 	return m_player.getDuration();
 }
 
-void* player_get_y_buffer()
+void* player_get_peek_y_buffer()
 {
-	return m_player.getYBuffer();
+	return m_player.get_peek_yBuffer();
 }
 
-void* player_get_u_buffer()
+void* player_get_peek_u_buffer()
 {
-	return m_player.getUBuffer();
+	return m_player.get_peek_uBuffer();
 }
 
-void* player_get_v_buffer()
+void* player_get_peek_v_buffer()
 {
-	return m_player.getVBuffer();
+	return m_player.get_peek_vBuffer();
+}
+
+void* player_get_pop_y_buffer()
+{
+	return m_player.get_pop_yBuffer();
+}
+
+void* player_get_pop_u_buffer()
+{
+	return m_player.get_pop_uBuffer();
+}
+
+void* player_get_pop_v_buffer()
+{
+	return m_player.get_pop_vBuffer();
 }
 
 // https://github.com/keijiro/TextureUpdateExample
@@ -118,31 +133,26 @@ void unity_texture_update_callback(int eventID, void* data)
 		// UpdateTextureBegin: Generate and return texture image data.
 		UnityRenderingExtTextureUpdateParamsV2 *params = (UnityRenderingExtTextureUpdateParamsV2 *)data;
 		unsigned int planeType = params->userData;
-		int ret = player_renderOneFrame();
+
 		void* framedata = NULL;
-		if (ret == 0)
+
+		// y -> 0
+		// u -> 1
+		// v -> 2
+		if (planeType == 0)
 		{
-			// y -> 0
-			// u -> 1
-			// v -> 2
-			if (planeType == 0)
-			{
-				framedata = player_get_y_buffer();
-			}
-			else if (planeType == 1)
-			{
-				framedata = player_get_u_buffer();
-			}
-			else if (planeType == 2)
-			{
-				framedata = player_get_v_buffer();
-			}
-			params->texData = (unsigned char*)framedata;
+			framedata = player_get_y_buffer();
 		}
-		else
+		else if (planeType == 1)
 		{
-			params->texData = NULL;
+			framedata = player_get_u_buffer();
 		}
+		else if (planeType == 2)
+		{
+			framedata = player_get_v_buffer();
+		}
+		params->texData = (unsigned char*)framedata;
+
 	}
 	else if (eventID == kUnityRenderingExtEventUpdateTextureEndV2)
 	{

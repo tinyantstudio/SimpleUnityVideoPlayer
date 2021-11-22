@@ -27,9 +27,13 @@ public:
 	unsigned long getDuration();
 
 	// if split y,u,v buffer
-	void* getYBuffer();
-	void* getUBuffer();
-	void* getVBuffer();
+	void* get_pop_YBuffer();
+	void* get_pop_UBuffer();
+	void* get_pop_VBuffer();
+
+	void* get_peek_yBuffer();
+	void* get_peek_uBuffer();
+	void* get_peek_vBuffer();
 
 	int getWidth();
 	int getHeight();

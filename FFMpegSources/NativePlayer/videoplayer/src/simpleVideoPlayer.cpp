@@ -363,6 +363,16 @@ void* simpleVideoPlayer::pop_buffer(std::deque<unsigned char*>& queue)
 	return NULL;
 }
 
+void* peek_buffer(std::deque<unsigned char*>& queue)
+{
+	if (queue.size() > 0)
+	{
+		unsigned char* buf = queue.front();
+		return buf;
+	}
+	return NULL;
+}
+
 // need to release the buffer on caller side
 void* simpleVideoPlayer::getFrameBuffer()
 {
@@ -371,19 +381,34 @@ void* simpleVideoPlayer::getFrameBuffer()
 
 // need call three times
 // 0,1,2  3,4,5  6,7,8
-void* simpleVideoPlayer::getYBuffer()
+void* simpleVideoPlayer::get_pop_yBuffer()
 {
 	return pop_buffer(_yBufferQueue);
 }
 
-void* simpleVideoPlayer::getUBuffer()
+void* simpleVideoPlayer::get_pop_uBuffer()
 {
 	return pop_buffer(_uBufferQueue);
 }
 
-void* simpleVideoPlayer::getVBuffer()
+void* simpleVideoPlayer::get_pop_vBuffer()
 {
 	return pop_buffer(_vBufferQueue);
+}
+
+void* simpleVideoPlayer::get_peek_yBuffer()
+{
+	return peek_buffer(_yBufferQueue);
+}
+
+void* simpleVideoPlayer::get_peek_uBuffer()
+{
+	return peek_buffer(_uBufferQueue);
+}
+
+void* simpleVideoPlayer::get_peek_vBuffer()
+{
+	return peek_buffer(_vBufferQueue);
 }
 
 void simpleVideoPlayer::freeFrameBuffer(unsigned char* buf)

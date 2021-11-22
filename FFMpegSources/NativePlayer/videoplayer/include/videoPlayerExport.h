@@ -28,9 +28,13 @@ extern "C"
 	VIDEOPLAYERLIB_API void player_setconfig(bool splityuv);
 
 	// using unity command buffer
-	VIDEOPLAYERLIB_API void* player_get_y_buffer();
-	VIDEOPLAYERLIB_API void* player_get_u_buffer();
-	VIDEOPLAYERLIB_API void* player_get_v_buffer();
+	VIDEOPLAYERLIB_API void* player_get_peek_y_buffer();
+	VIDEOPLAYERLIB_API void* player_get_peek_u_buffer();
+	VIDEOPLAYERLIB_API void* player_get_peek_v_buffer();
+
+	VIDEOPLAYERLIB_API void* player_get_pop_y_buffer();
+	VIDEOPLAYERLIB_API void* player_get_pop_u_buffer();
+	VIDEOPLAYERLIB_API void* player_get_pop_v_buffer();
 }
 
 // using unity3d texture updating event (Y,UV texture data)
