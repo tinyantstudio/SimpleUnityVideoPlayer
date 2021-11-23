@@ -14,7 +14,7 @@ using ffmpeg c++ for video decoding
 
 # Texture Updating
 
-> the key: we use yuv three textures(TextureFormat.R8) to store yuv plane value, and convert yuv to RGB with shader
+> the key: we use yuv three textures(TextureFormat.R8) to store yuv plane value, and convert yuv to RGB with shader, so the most important of render video in unity3d is texture-updating, like we need update yuv textures each frame
 
 
 we have multi-ways to make texture updating
