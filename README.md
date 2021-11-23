@@ -6,11 +6,15 @@ using ffmpeg c++ for video decoding
 # How to make a simple video player in Unity3d
 
 1. load video data by ffmpeg or other video decode tools to decode video file get video informations(fps, duration, format type ...)
-2. use ffmpeg or other tools to decode video data to frame image format(RGB,YUV420,NV120 ...)
+2. use ffmpeg or other tools to decode video data to frame image format(RGB,YUV420,NV12 ...)
 4. pass one frame data buffer from native player to unity3d (normal way)
 5. unity3d convert native frame data buffer to byte array(like Inptr to byte array)
 5. unity3d side need to create texture and updating texture with bytes
 6. unity3d side we should convert frame buffer data to RGB color if input frame data isn't RGB format(like Y,UV to RGB)
+
+# Video decode
+
+in native side create a very simple ffmpeg c++ player to decode video frame data(audio not included),export interface to unity3d ,so we init player and decode video by unity3d side call.
 
 # Texture Updating
 
@@ -59,7 +63,7 @@ there is no buffer pass and convert between Native and Unity3d so will not GC ha
 
 ## Using "GPU" - using comamnd buffer (IssuePluginCustomTextureUpdateV2)
 
-no need to create different render-api-backend to update texture.
+we can use CommandBuffer.IssuePluginCustomTextureUpdateV2 Send a texture update event to a native code plugin.so there no need to create different render-api-backend to update texture, it's a common way.
 
 native side
 ```
@@ -74,7 +78,7 @@ if (eventID == kUnityRenderingExtEventUpdateTextureBeginV2)
 else if (eventID == kUnityRenderingExtEventUpdateTextureEndV2)
 {
 	// release frame data after unity3d update texture end
-	delete framedata;
+	free framedata;
 }
 ```
 
@@ -90,7 +94,6 @@ _command.IssuePluginCustomTextureUpdateV2(callBack,
     mVTexture, (uint)2);
 Graphics.ExecuteCommandBuffer(_command);
 _command.Clear();
-
 
 // with yuv textures using shader to output RGB color
 renderRGBWithShader();
