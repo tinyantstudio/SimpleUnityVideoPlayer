@@ -9,7 +9,7 @@ else()
     if(NOT WIN32)
         set(GLAD_LIBRARIES dl)
     endif()
-endif()
+endif() 
 
 file(GLOB PROJECT_SOURCES src/*.cpp)
 file(GLOB PROJECT_HEADERS include/*.h)
