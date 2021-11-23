@@ -1,4 +1,4 @@
-# simplevideodemo
+# Simple Video Render in Unity3d
 render video in unity3d  
 using ffmpeg c++ for video decoding
 
@@ -42,6 +42,13 @@ Cons:
 ## Using "GPU" - using opengl,DX...backend
 unity3d side create textures by input video height , width and image format, use GetNativeTexturePtr() get texture2d's native ptr pass to native-render-backend, each frame we using opengl or dx to updating texture data
 
+```
+
+opengl ways:
+1. update texture buffer glTexSubImage2D or glTexImage2D to update unity3d's texture in native opengl backend
+2. if we using SurfaceTexture in Android studio, we can sample SurfaceTexture to fbo -> convert GL_TEXTURE_EXTERNAL_OES to GL_TEXTURE -> update unity3d's texture
+
+```
 https://github.com/Unity-Technologies/NativeRenderingPlugin
 
 
@@ -49,6 +56,8 @@ there is no buffer pass and convert between Native and Unity3d so will not GC ha
 
 
 ## Using "GPU" - using comamnd buffer (IssuePluginCustomTextureUpdateV2)
+
+no need to create different render-api-backend to update texture.
 
 native side
 ```
