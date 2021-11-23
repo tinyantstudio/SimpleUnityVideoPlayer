@@ -46,7 +46,7 @@ unity3d side create textures by input video height , width and image format, use
 
 opengl ways:
 1. update texture buffer glTexSubImage2D or glTexImage2D to update unity3d's texture in native opengl backend
-2. render FBO?
+2. if we using SurfaceTexture in Android studio, we can sample SurfaceTexture to fbo -> convert GL_TEXTURE_EXTERNAL_OES to GL_TEXTURE -> update unity3d's texture
 
 ```
 https://github.com/Unity-Technologies/NativeRenderingPlugin
