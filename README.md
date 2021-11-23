@@ -19,7 +19,7 @@ using ffmpeg c++ for video decoding
 
 we have multi-ways to make texture updating
 
-## "CPU" normal way pass raw frame buffer data to unity3d (RGB, YUV...)
+## Using "CPU" normal way pass raw frame buffer data to unity3d (RGB, YUV...)
 native side decode video data and pass frame buffer to unity3d, each frame we need to convert given IntPtr to bytes[] 
 unity3d side will create texture2d with bytes or just update texture2d with buffer bytes
 
@@ -39,7 +39,7 @@ Cons:
 
 
 
-## "GPU" - using opengl,DX...backend
+## Using "GPU" - using opengl,DX...backend
 unity3d side create textures by input video height , width and image format, use GetNativeTexturePtr() get texture2d's native ptr pass to native-render-backend, each frame we using opengl or dx to updating texture data
 
 https://github.com/Unity-Technologies/NativeRenderingPlugin
@@ -48,7 +48,7 @@ https://github.com/Unity-Technologies/NativeRenderingPlugin
 there is no buffer pass and convert between Native and Unity3d so will not GC happened, it's fater then using CPU texture update
 
 
-## "GPU" - using comamnd buffer (IssuePluginCustomTextureUpdateV2)
+## Using "GPU" - using comamnd buffer (IssuePluginCustomTextureUpdateV2)
 
 native side
 ```
@@ -125,4 +125,6 @@ cmake -G "Visual Studio 15 Win64" ..
 # Result
 ![image](https://user-images.githubusercontent.com/14041295/142991396-cf7ddb0f-3de4-4e08-833e-3ecb8f53e276.png)
 ![image](https://user-images.githubusercontent.com/14041295/142991586-12de23db-474a-47ee-8654-98516dc40c34.png)
+![image](https://user-images.githubusercontent.com/14041295/142991860-fec8f3e6-27f2-46ea-84a1-bfcdbab2b709.png)
+
 
