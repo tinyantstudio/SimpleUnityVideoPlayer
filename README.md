@@ -55,6 +55,8 @@ there is no buffer pass and convert between Native and Unity3d so will not GC ha
 
 ## Using "GPU" - using comamnd buffer (IssuePluginCustomTextureUpdateV2)
 
+no need to create different render-api-backend to update texture.
+
 native side
 ```
 if (eventID == kUnityRenderingExtEventUpdateTextureBeginV2)
