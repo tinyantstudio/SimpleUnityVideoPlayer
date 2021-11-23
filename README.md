@@ -1,4 +1,4 @@
-# Simple Video Render Demo in Unity3d
+# Simple Video Render in Unity3d
 render video in unity3d  
 using ffmpeg c++ for video decoding
 
