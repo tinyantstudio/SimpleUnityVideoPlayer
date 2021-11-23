@@ -61,9 +61,9 @@ https://github.com/Unity-Technologies/NativeRenderingPlugin
 there is no buffer pass and convert between Native and Unity3d so will not GC happened, it's fater then using CPU texture update
 
 
-## Using "GPU" - using comamnd buffer (IssuePluginCustomTextureUpdateV2)
+## Using "GPU" - using CommandBuffer.IssuePluginCustomTextureUpdateV2
 
-we can use CommandBuffer.IssuePluginCustomTextureUpdateV2 Send a texture update event to a native code plugin.so there no need to create different render-api-backend to update texture, it's a common way.
+Use CommandBuffer.IssuePluginCustomTextureUpdateV2 Send a texture update event to a native code plugin.so there no need to create different render-api-backend to update texture, it's a common way.
 
 native side
 ```
