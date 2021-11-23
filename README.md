@@ -42,6 +42,11 @@ Cons:
 ## Using "GPU" - using opengl,DX...backend
 unity3d side create textures by input video height , width and image format, use GetNativeTexturePtr() get texture2d's native ptr pass to native-render-backend, each frame we using opengl or dx to updating texture data
 
+```
+
+opengl maybe use glTexSubImage2D or glTexImage2D to update unity3d's texture in native opengl backend
+
+```
 https://github.com/Unity-Technologies/NativeRenderingPlugin
 
 
