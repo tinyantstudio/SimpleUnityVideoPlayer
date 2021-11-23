@@ -5,7 +5,7 @@ using ffmpeg c++ for video decoding
 
 # How to make a simple video player in Unity3d
 
-1. load video data by ffmpeg or other video decode tools to decode video file get video informations(fps, duration, format type ...) and frame buffer
+1. load video data by ffmpeg or other video decode tools to decode video file get video informations(fps, duration, format type ...)
 2. use ffmpeg or other tools to decode video frame data to image format(RGB,YUV420,NV120 ...)
 4. pass one frame data buffer from native player to unity3d (normal way)
 5. unity3d convert native frame data buffer to byte array(like Inptr to byte array)
