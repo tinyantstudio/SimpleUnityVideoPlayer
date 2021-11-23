@@ -1071,7 +1071,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Show YUV[ CommandBuffer to Update Texture]
+  m_Text: Show YUV[ CommandBuffer to Update Texture] YUV's value in (R) Channel
 --- !u!222 &2030303381
 CanvasRenderer:
   m_ObjectHideFlags: 0
