@@ -46,7 +46,7 @@ unity3d side create textures by input video height , width and image format, use
 
 opengl ways:
 1. update texture buffer glTexSubImage2D or glTexImage2D to update unity3d's texture in native opengl backend
-2. if we using SurfaceTexture in Android studio, we can sample SurfaceTexture to fbo -> convert GL_TEXTURE_EXTERNAL_OES to GL_TEXTURE -> update unity3d's texture
+2. if we using SurfaceTexture in Android, we can sample SurfaceTexture to fbo -> convert GL_TEXTURE_EXTERNAL_OES to GL_TEXTURE -> update unity3d's texture
 
 
 
@@ -99,7 +99,7 @@ renderRGBWithShader();
 
 # Road
 
-**we using yuv240 to render video frame, nativeplayer will output yuv frame buffer.**
+**we render video frame image to yuv420 format, nativeplayer will output yuv420 frame buffer.**
 unity3d side we create three textures(YUV) , use shader sample yuv textures and with formula to outout RGB color  
 we store yuv plane value in texture's **R** Channel so our debug yuv texture will looks RED  
 
