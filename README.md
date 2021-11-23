@@ -17,16 +17,15 @@ using ffmpeg c++ for video decoding
 we have multi-ways to make texture updating
 
 ## "CPU" normal way pass raw frame buffer data to unity3d (RGB, YUV...)
-decode video frame and pass buffer to unity3d, each frame we need to convert IntPtr to bytes[] 
-unity3d side will create texture2d with bytes or just update texture2d with converted buffer bytes
+native side decode video data and pass frame buffer to unity3d, each frame we need to convert given IntPtr to bytes[] 
+unity3d side will create texture2d with bytes or just update texture2d with buffer bytes
 
 we has multi ways to make texture2d updating with input bytes
 
-- 1 way---->. every frame to create new texture2d with input buffer by LoadRawTextureData
-- 2 way---->. just create texture2d once,everty frame we using SetPixelData to update texture2d's data
+- 1 way---->. every frame to create new texture2d with input buffer by LoadRawTextureData, and destory pre-created texture2d
+- 2 way---->. create texture2d once,everty frame we using SetPixelData to update texture2d's data
 
-after update texture raw data with income bytes we need to use Texture2D.Apply() upload texture to GPU
-
+after update texture raw data with raw bytes, we need call Texture2D.Apply() upload texture to GPU finish texture-updating
 
 Pros: 
 1. freely to use different native output buffers (nv12, yuv420,rgb...)
@@ -38,10 +37,10 @@ Cons:
 
 
 ## "GPU" - using opengl,DX...back end
-unity3d side create textures by input video height and width, GetNativeTexturePtr() get native ptr pass to native-render-backend, each frame we using opengl or dx to updating texture data
+unity3d side create textures by input video height , width and image format, use GetNativeTexturePtr() get texture2d's native ptr pass to native-render-backend, each frame we using opengl or dx to updating texture data
 
 
-there is not buffer pass and convert between Native and Unity3d so will not GC happened, it's fater then using CPU texture update
+there is no buffer pass and convert between Native and Unity3d so will not GC happened, it's fater then using CPU texture update
 
 
 ## "GPU" - using comamnd buffer (IssuePluginCustomTextureUpdateV2)
