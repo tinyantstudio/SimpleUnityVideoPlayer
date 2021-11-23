@@ -195,7 +195,7 @@ int simpleVideoPlayer::startPlayVideo(std::string filepath)
 	_readyToRenderVideoFrame = true;
 
 	logging("video width: %d,height: %d", _pCodecContext->width, _pCodecContext->height);
-	std::cout << "video decode fmt: " <<_pCodecContext->pix_fmt << std::endl;
+	std::cout << "video decode fmt: " << _pCodecContext->pix_fmt << std::endl;
 	return 0;
 }
 
@@ -234,7 +234,7 @@ int simpleVideoPlayer::renderFrame()
 	{
 		if (_pPacket->stream_index == _video_stream_index)
 		{
-			logging("video frame...");
+			logging("video frame stream");
 			logging("AVPacket->pts %" PRId64, _pPacket->pts);
 			response = decodePacket();
 			if (response < 0)
@@ -251,7 +251,7 @@ int simpleVideoPlayer::renderFrame()
 		}
 		else
 		{
-			logging("not video frame...");
+			logging("not video frame stream keep read frame");
 		}
 		av_packet_unref(_pPacket);
 	}
@@ -322,12 +322,10 @@ int simpleVideoPlayer::decodePacket()
 			}
 			else
 			{
-				// just push Y buffer
-				int uvsize = y_size / 4;
-
 				unsigned char* ybuffer = new unsigned char[y_size];
 				memcpy(ybuffer, targetFrame->data[0], y_size);
 
+				int uvsize = y_size / 4;
 				unsigned char* ubuffer = new unsigned char[uvsize];
 				memcpy(ubuffer, targetFrame->data[1], uvsize);
 
@@ -337,6 +335,11 @@ int simpleVideoPlayer::decodePacket()
 				_yBufferQueue.push_back(ybuffer);
 				_uBufferQueue.push_back(ubuffer);
 				_vBufferQueue.push_back(vbuffer);
+
+				//char filename[1024];
+				//snprintf(filename, sizeof(filename), "%s-full-frame-%d-y.origin", "frame", _pCodecContext->frame_number);
+				//save_bytes_to_file(ybuffer, y_size, filename);
+				//logging("debug save one frame to local file path: %s", filename);
 			}
 
 			// debug save to local file

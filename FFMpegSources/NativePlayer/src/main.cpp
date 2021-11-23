@@ -29,14 +29,15 @@ int main(int argc, const char *argv[])
 
 	// Test for simplePlayer class
 	ret = player_init();
+	player_setconfig(true);
 	std::cout << "ret: " << ret << endl;
 	assert(ret == 0);
 	std::string mediapath = "E:/Lab/simplevideodemo/FFMpegSources/Resources/small_bunny_1080p_60fps.mp4";
 	// std::string mediapath = "E:/Lab/simplevideodemo/FFMpegSources/Resources/big_buck_4K_big.mp4";
-	ret = player_startPlayVideo(mediapath.c_str()); 
+	ret = player_startPlayVideo(mediapath.c_str());
 	assert(ret == 0);
 
-	int width = player_get_width(); 
+	int width = player_get_width();
 	int height = player_get_height();
 
 	std::cout << "Video Width: " << width << ", Height: " << height << std::endl;

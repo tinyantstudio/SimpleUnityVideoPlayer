@@ -649,11 +649,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b8619208810ba6419e065215652baf7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mediaPath: G:\KunDev\nativeunity3dplayer-master\simplevideodemo\FFMpegSources\Resources\big_bunny_1080p_60fps_30s.mp4
+  mediaPath: E:\Lab\simplevideodemo\FFMpegSources\Resources\big_buck_4K_big.mp4
   _playTotalTime: 10
   _customTotalTime: 0
   _curPlayTime: 0
-  _playFPS: 30
+  _playFPS: 60
   _CurFrameCount: 0
   _targetRawImageToShowFrame: {fileID: 1140990100}
   mBlitYUVToRGBMat: {fileID: 2100000, guid: 072b2065d9f388244ab69afc451d1bdc, type: 2}

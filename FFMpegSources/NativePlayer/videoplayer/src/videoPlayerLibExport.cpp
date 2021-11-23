@@ -1,9 +1,10 @@
 #include "videoPlayerExport.h"
 #include "simpleVideoPlayer.h"
 #include "IUnityRenderingExtensions.h"
-#include <math.h>
-#include <stdint.h>
-#include <stdlib.h>
+
+// use for measure time consuming
+#include <chrono>
+using namespace std::chrono;
 
 simpleVideoPlayer m_player;
 
@@ -88,78 +89,45 @@ void* player_get_pop_v_buffer()
 	return m_player.get_pop_vBuffer();
 }
 
-// https://github.com/keijiro/TextureUpdateExample
-// how to update texture
-uint32_t Plasma(int x, int y, int width, int height, unsigned int frame)
-{
-	float px = (float)x / width;
-	float py = (float)y / height;
-	float time = frame / 60.0f;
-
-	float l = sinf(px * sinf(time * 1.3f) + sinf(py * 4 + time) * sinf(time));
-
-	uint32_t r = sinf(l * 6) * 127 + 127;
-	uint32_t g = sinf(l * 7) * 127 + 127;
-	uint32_t b = sinf(l * 10) * 127 + 127;
-
-	return r + (g << 8) + (b << 16) + 0xff000000u;
-}
-
+// unity3d input calba data just support uint 
 void unity_texture_update_callback(int eventID, void* data)
 {
-	//if (eventID == kUnityRenderingExtEventUpdateTextureBeginV2)
-	//{
-	//	// UpdateTextureBegin: Generate and return texture image data.
-	//	UnityRenderingExtTextureUpdateParamsV2 *params = (UnityRenderingExtTextureUpdateParamsV2 *)data;
-	//	unsigned int frame = params->userData;
-
-	//	uint32_t *img = (uint32_t *)malloc(params->width * params->height * 4);
-	//	for (int y = 0; y < params->height; y++)
-	//		for (int x = 0; x < params->width; x++)
-	//			img[y * params->width + x] =
-	//			Plasma(x, y, params->width, params->height, frame);
-
-	//	params->texData = img;
-	//}
-	//else if (eventID == kUnityRenderingExtEventUpdateTextureEndV2)
-	//{
-	//	// UpdateTextureEnd: Free up the temporary memory.
-	//	UnityRenderingExtTextureUpdateParamsV2 *params = (UnityRenderingExtTextureUpdateParamsV2 *)data;
-	//	free(params->texData);
-	//}
-
 	if (eventID == kUnityRenderingExtEventUpdateTextureBeginV2)
 	{
-		// UpdateTextureBegin: Generate and return texture image data.
+		// render in unity3d
+		// in renderthread just take render result
 		UnityRenderingExtTextureUpdateParamsV2 *params = (UnityRenderingExtTextureUpdateParamsV2 *)data;
 		unsigned int planeType = params->userData;
+	
+		auto millisec_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+		std::cout << "texture update begin type: " << planeType << ",time: " << millisec_since_epoch << std::endl;
+		
 		void* framedata = NULL;
 		// y -> 0
 		// u -> 1
 		// v -> 2
-		std::cout << "unity_texture_update_callback type: " << planeType << std::endl;
+		std::cout << "videoPlayerExport::unity_texture_update_callback type: " << planeType << std::endl;
 		if (planeType == 0)
-		{
-			framedata = player_peek_y_buffer();
-		}
+			framedata = player_get_pop_y_buffer();
 		else if (planeType == 1)
-		{
-			framedata = player_peek_u_buffer();
-		}
+			framedata = player_get_pop_u_buffer();
 		else if (planeType == 2)
-		{
-			framedata = player_peek_v_buffer();
-		}
+			framedata = player_get_pop_v_buffer();
 		if (framedata != NULL)
-		{
-			std::cout << "frame data is not null..." << std::endl;
-		}
+			std::cout << "videoPlayerExport::unity_texture_update_callback frame data is not null..." << std::endl;
+		else
+			std::cout << "videoPlayerExport::unity_texture_update_callback frame data is null..." << std::endl;
 		params->texData = framedata;
-
 	}
 	else if (eventID == kUnityRenderingExtEventUpdateTextureEndV2)
 	{
 		UnityRenderingExtTextureUpdateParamsV2 *params = (UnityRenderingExtTextureUpdateParamsV2 *)data;
+		unsigned int planeType = params->userData;
+
+		auto millisec_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+		std::cout << "texture update end type: " << planeType << ",time: " << millisec_since_epoch << std::endl;
+
+		params = (UnityRenderingExtTextureUpdateParamsV2 *)data;
 		if (params->texData != NULL)
 		{
 			player_getOneFrameBuffer_Done((unsigned char*)params->texData);

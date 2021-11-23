@@ -25,6 +25,8 @@ public class VideoPlayer_UnityCommandBuf : SimpleVideoPlayer
     protected override void Start()
     {
         _command = new CommandBuffer();
+        // see CPU usage timeline we will find renderthread mark [NativePlayer_Update_Texture]
+        _command.name = "NativePlayer_Update_Texture";
         base.Start();
     }
 
@@ -58,73 +60,31 @@ public class VideoPlayer_UnityCommandBuf : SimpleVideoPlayer
             yield break;
         }
 
-        int ybufsize = _texYHeight * _texYWidth;
-        int ubufsize = _texYHeight * _texYWidth / 4;
-        int vbufsize = _texYHeight * _texYWidth / 4;
-
-        byte[] ybuff = new byte[ybufsize];
-        byte[] ubuff = new byte[ubufsize];
-        byte[] vbuff = new byte[vbufsize];
-
         while (_curPlayTime < _playTotalTime)
         {
-            // _command.IssuePluginCustomTextureUpdateV2(callBack,
-            //     mYTexture, (uint)0);
-            // _command.IssuePluginCustomTextureUpdateV2(callBack,
-            //     mUTexture, (uint)1);
-            // _command.IssuePluginCustomTextureUpdateV2(callBack,
-            //     mVTexture, (uint)2);
             int ret = LibVideoPlayerExport.player_renderOneFrame();
             if (ret == 0)
             {
-                IntPtr yptr = LibVideoPlayerExport.player_peek_y_buffer();
-                IntPtr uptr = LibVideoPlayerExport.player_peek_u_buffer();
-                IntPtr vptr = LibVideoPlayerExport.player_peek_v_buffer();
+                // Debug.Log("render one frame...");
+                _command.IssuePluginCustomTextureUpdateV2(callBack,
+                    mYTexture, (uint)0);
+                _command.IssuePluginCustomTextureUpdateV2(callBack,
+                    mUTexture, (uint)1);
+                _command.IssuePluginCustomTextureUpdateV2(callBack,
+                    mVTexture, (uint)2);
+                Graphics.ExecuteCommandBuffer(_command);
+                _command.Clear();
 
-                if (yptr != IntPtr.Zero && uptr != IntPtr.Zero && vptr != IntPtr.Zero)
-                {
-                    // Marshal.Copy(yptr, ybuff, 0, ybufsize);
-                    // Marshal.Copy(uptr, ubuff, 0, ubufsize);
-                    // Marshal.Copy(vptr, vbuff, 0, vbufsize);
-                    //
-                    // mYTexture.SetPixelData(ybuff, 0, 0);
-                    // mUTexture.SetPixelData(ubuff, 0, 0);
-                    // mVTexture.SetPixelData(vbuff, 0, 0);
-                    //
-                    // mYTexture.Apply(false);
-                    // mUTexture.Apply(false);
-                    // mVTexture.Apply(false);
-                    
-                    _command.IssuePluginCustomTextureUpdateV2(callBack,
-                        mYTexture, (uint)0);
-                    
-                    // _command.IssuePluginCustomTextureUpdateV2(callBack, 
-                    //     mUTexture, (uint)1);
-                    // _command.IssuePluginCustomTextureUpdateV2(callBack,
-                    //     mVTexture, (uint)2);
-                    Graphics.ExecuteCommandBuffer(_command);
-                    _command.Clear();
-
-                    RenderVideoFrameBlit();
-                    Debug.Log("render one frame...");
-                }
-
-                LibVideoPlayerExport.player_get_pop_y_buffer();
-                LibVideoPlayerExport.player_get_pop_u_buffer();
-                LibVideoPlayerExport.player_get_pop_v_buffer();
+                // IssuePluginCustomTextureUpdateV2 command can't be Async just be sync!!!
+                // so it will block GPU if command time comsuming!!!
+                // so don't push so hard like [4K 60fps]!!!
+                // this.ValidateAgainstExecutionFlags(CommandBufferExecutionFlags.None, CommandBufferExecutionFlags.AsyncCompute);
+                // Graphics.ExecuteCommandBufferAsync(_command, ComputeQueueType.Background);
+                // Graphics.ExecuteCommandBuffer(_command);
+                // _command.Clear();
+                RenderVideoFrameBlit();
             }
 
-            // IssuePluginCustomTextureUpdateV2 command can't be Async just be sync!!!
-            // so it will block GPU if command time comsuming!!!
-            // so don't push so hard like [4K 60fps]!!!
-            // this.ValidateAgainstExecutionFlags(CommandBufferExecutionFlags.None, CommandBufferExecutionFlags.AsyncCompute);
-
-            // Graphics.ExecuteCommandBufferAsync(_command, ComputeQueueType.Background);
-            // Graphics.ExecuteCommandBuffer(_command);
-            // _command.Clear();
-            // Debug.Log("render frame...");
-            // int ret = LibVideoPlayerExport.player_renderOneFrame();
-            // Debug.Log("render frame...: " + ret);
             yield return new WaitForSeconds(_timeinterval);
             _curPlayTime += _timeinterval;
         }
