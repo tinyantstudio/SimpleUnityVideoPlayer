@@ -122,7 +122,7 @@ int enter_test_videoPlayer_static_Lib()
 {
 	std::cout << "Make ffmpeg exmaple project" << std::endl;
 	// std::string mediapath = "E:/Lab/simplevideodemo/FFMpegSources/NativePlayer/build/NativePlayer/Debug/small_bunny_1080p_60fps.mp4";
-	std::string mediapath = "G:/KunDev/nativeunity3dplayer-master/simplevideodemo/FFMpegSources/Resources/small_bunny_1080p_60fps.mp4";
+	std::string mediapath = "E:/Lab/simplevideodemo/FFMpegSources/Resources/big_buck_bunny.mp4";
 
 	// mediapath = "./../../../../Resources/small_bunny_1080p_60fps.mp4";
 	std::string mark = "\\";
@@ -307,7 +307,7 @@ int enter_test_videoPlayer_static_Lib()
 
 	int response = 0;
 	// int how_many_packets_to_process = 30 * 60;
-	int how_many_packets_to_process = 8;
+	int how_many_packets_to_process = 20;
 	// fill the Packet with data from the Stream
 	// https://ffmpeg.org/doxygen/trunk/group__lavf__decoding.html#ga4fdb3084415a82e3810de6ee60e46a61
 	while (av_read_frame(pFormatContext, pPacket) >= 0)

@@ -5,14 +5,21 @@ using UnityEngine.UI;
 using System.Runtime.InteropServices;
 using System;
 using System.Diagnostics;
-using UnityEngine.Analytics;
+using System.IO;
 using Debug = UnityEngine.Debug;
 using Object = UnityEngine.Object;
 using UnityEngine.Profiling;
 
 public class SimpleVideoPlayer : MonoBehaviour
 {
-    public string mediaPath = string.Empty;
+    public string mediaPathRoot = string.Empty;
+    public string mediaFileName = string.Empty;
+
+    private string GetPlayMediaFilePath
+    {
+        get { return Path.Combine(mediaPathRoot, mediaFileName); }
+    }
+
     protected float _timeinterval = 1 / 25f;
     public float _playTotalTime = 10;
     public bool _customTotalTime = false;
@@ -35,6 +42,17 @@ public class SimpleVideoPlayer : MonoBehaviour
     protected int _texUVWidth;
     protected int _texUVHeight;
 
+    [Header("YUV Debug Texture")] public RawImage _yDebugImage;
+    public RawImage _uDebugImage;
+    public RawImage _vDebugImage;
+
+    // cache coroutine for reduce GC every frame
+    protected YieldInstruction _coroutine_time_interval;
+
+    // toggle if we want to show YUV Texture when render video
+    [Header("--------------")] public Toggle _toggleShowYUVTexture;
+    public GameObject _yuvRoot;
+
     public enum TEX_YUV_TYPE
     {
         Y = 0,
@@ -55,7 +73,16 @@ public class SimpleVideoPlayer : MonoBehaviour
 
     protected virtual void Start()
     {
+        // set demo root path if not assigned
+        if (string.IsNullOrEmpty(mediaPathRoot))
+        {
+            mediaFileName = "big_bunny_1080p_60fps_30s.mp4";
+            mediaPathRoot = Path.Combine(Application.dataPath, "../FFMpegSources/Resources");
+        }
+
         StartCoroutine(_StartPlayVideo());
+        _yuvRoot.SetActive(_toggleShowYUVTexture.isOn);
+        _toggleShowYUVTexture.onValueChanged.AddListener((ison) => { _yuvRoot.SetActive(ison); });
     }
 
     protected void OnDestroy()
@@ -128,7 +155,16 @@ public class SimpleVideoPlayer : MonoBehaviour
         int ret = LibVideoPlayerExport.player_init();
         if (ret != 0)
             return false;
-        ret = LibVideoPlayerExport.player_startPlayVideo(mediaPath);
+
+        string mediapath = GetPlayMediaFilePath;
+        SimpleDebuger.LogInfo(TAG, "try to player media: " + mediapath);
+        if (string.IsNullOrEmpty(mediapath) || !File.Exists(mediapath))
+        {
+            SimpleDebuger.LogError(TAG, "Invalid media path: " + mediapath);
+            return false;
+        }
+
+        ret = LibVideoPlayerExport.player_startPlayVideo(mediapath);
         if (ret != 0)
             return false;
         ulong duration = LibVideoPlayerExport.player_get_duration();
@@ -161,6 +197,9 @@ public class SimpleVideoPlayer : MonoBehaviour
             yield break;
         }
 
+        // cache coroutine reduce GC
+        _coroutine_time_interval = new WaitForSeconds(_timeinterval);
+
         int totalBuffSize = (int)(_texYWidth * _texYHeight * 1.5f);
         SimpleDebuger.LogInfo(TAG, "video width: " + _texYWidth + ",height: " + _texYHeight);
         int ybufsize = _texYHeight * _texYWidth;
@@ -172,13 +211,15 @@ public class SimpleVideoPlayer : MonoBehaviour
         byte[] ubuff = new byte[ubufsize];
         byte[] vbuff = new byte[vbufsize];
 
-        Stopwatch sw = new Stopwatch();
+        float scale = _texYWidth > 1920 ? 0.75f : 1.0f;
+
         while (_curPlayTime < _playTotalTime)
         {
-            sw.Restart();
+            // find profiler mark [native_render_one_frame] in profiler window CPU
+            Profiler.BeginSample("native_render_one_frame");
             int ret = LibVideoPlayerExport.player_renderOneFrame();
-            sw.Stop();
-            Debug.Log($"render one frame take: {sw.ElapsedMilliseconds}ms");
+            Profiler.EndSample();
+
             if (ret != 0)
             {
                 SimpleDebuger.LogInfo(TAG, "skip frame: " + _CurFrameCount);
@@ -217,13 +258,19 @@ public class SimpleVideoPlayer : MonoBehaviour
                     // mUTexture.LoadRawTextureData(ubuff);
                     // mVTexture.LoadRawTextureData(vbuff);
                     //
+                    //
+                    //
 
                     //
-                    // 2 way. everty frame not to create new texture2d,just using SetPixelData to update texture2d's data
+                    // 2 way---->. everty frame not to create new texture2d,just using SetPixelData to update texture2d's data
                     //
                     CreateTexture(TEX_YUV_TYPE.Y, _texYWidth, _texYHeight);
                     CreateTexture(TEX_YUV_TYPE.U, _texUVWidth, _texUVHeight);
                     CreateTexture(TEX_YUV_TYPE.V, _texUVWidth, _texUVHeight);
+
+                    _yDebugImage.texture = mYTexture;
+                    _uDebugImage.texture = mUTexture;
+                    _vDebugImage.texture = mVTexture;
 
                     if (mUTexture == null || mYTexture == null || mVTexture == null)
                     {
@@ -234,6 +281,9 @@ public class SimpleVideoPlayer : MonoBehaviour
                     mYTexture.SetPixelData(ybuff, 0, 0);
                     mUTexture.SetPixelData(ubuff, 0, 0);
                     mVTexture.SetPixelData(vbuff, 0, 0);
+                    //
+                    //
+                    //
 
                     // Call Apply after setting image data to actually upload it to the GPU.
                     // Apply texture to GPU
@@ -242,29 +292,35 @@ public class SimpleVideoPlayer : MonoBehaviour
                     mUTexture.Apply(false);
                     mVTexture.Apply(false);
 
-                    RenderVideoFrameBlit();
+                    RenderVideoFrameBlitYUV(scale);
 
                     LibVideoPlayerExport.player_getOneFrameBuffer_Done(buffptr);
                 }
             }
 
             _CurFrameCount++;
-            yield return new WaitForSeconds(_timeinterval);
+            yield return _coroutine_time_interval;
             _curPlayTime += _timeinterval;
         }
     }
 
-    protected virtual void RenderVideoFrameBlit()
+    protected virtual void RenderVideoFrameBlitYUV(float scale = 1.0f)
     {
         mBlitYUVToRGBMat.SetTexture("_UTex", mUTexture);
         mBlitYUVToRGBMat.SetTexture("_VTex", mVTexture);
         mBlitYUVToRGBMat.SetMatrix("_YUVMat", _YUVToRGBMatrix);
 
+        int width = (int)(_texYWidth * scale);
+        int height = (int)(_texYHeight * scale);
+
         RenderTexture pre = RenderTexture.active;
         RenderTexture.active = _renderTexture;
         Graphics.Blit(mYTexture, _renderTexture, mBlitYUVToRGBMat);
+
         _targetRawImageToShowFrame.texture = _renderTexture;
-        _targetRawImageToShowFrame.SetNativeSize();
+        // _targetRawImageToShowFrame.SetNativeSize();
+        _targetRawImageToShowFrame.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
+        _targetRawImageToShowFrame.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
         RenderTexture.active = pre;
     }
 }

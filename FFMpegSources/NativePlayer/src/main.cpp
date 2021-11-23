@@ -17,23 +17,26 @@ int main(int argc, const char *argv[])
 {
 	std::cout << "Start Video Player Now..." << std::endl;
 	int ret = -1;
-	//ret = enter_test_videoPlayer_static_Lib();
-	//if (ret)
-	//	std::cout << "Fatal Error code: " << ret << std::endl;
-	//else
-	//{
-	//	std::cout << "========================" << std::endl;
-	//	std::cout << "Run success" << std::endl;
-	//	std::cout << "========================" << std::endl;
-	//}
+	ret = enter_test_videoPlayer_static_Lib();
+	if (ret)
+		std::cout << "Fatal Error code: " << ret << std::endl;
+	else 
+	{
+		std::cout << "========================" << std::endl;
+		std::cout << "Run success" << std::endl;
+		std::cout << "========================" << std::endl;
+	}
+
+	return 0;
 
 	// Test for simplePlayer class
 	ret = player_init();
 	player_setconfig(true);
 	std::cout << "ret: " << ret << endl;
 	assert(ret == 0);
-	std::string mediapath = "E:/Lab/simplevideodemo/FFMpegSources/Resources/small_bunny_1080p_60fps.mp4";
+	// std::string mediapath = "E:/Lab/simplevideodemo/FFMpegSources/Resources/small_bunny_1080p_60fps.mp4";
 	// std::string mediapath = "E:/Lab/simplevideodemo/FFMpegSources/Resources/big_buck_4K_big.mp4";
+	std::string mediapath = "E:/Lab/simplevideodemo/FFMpegSources/Resources/big_buck_bunny.mp4";
 	ret = player_startPlayVideo(mediapath.c_str());
 	assert(ret == 0);
 

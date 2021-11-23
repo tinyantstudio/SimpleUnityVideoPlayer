@@ -4,19 +4,12 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 using UnityEngine;
-using UnityEngine.Analytics;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
 
-// Referenced DLL must be in PATH or in the PLUGINS folder
-// if not we will get DllNotFoundExeption
 public class VideoPlayer_UnityCommandBuf : SimpleVideoPlayer
 {
     CommandBuffer _command;
-    public RawImage _yDebugImage;
-    public RawImage _uDebugImage;
-    public RawImage _vDebugImage;
-
     protected override string TAG
     {
         get { return "SimpleVideoPlayer-CommandBuffer"; }
@@ -25,7 +18,7 @@ public class VideoPlayer_UnityCommandBuf : SimpleVideoPlayer
     protected override void Start()
     {
         _command = new CommandBuffer();
-        // see CPU usage timeline we will find renderthread mark [NativePlayer_Update_Texture]
+        // see CPU usage Profiler Window timeline we will find renderthread mark [NativePlayer_Update_Texture]
         _command.name = "NativePlayer_Update_Texture";
         base.Start();
     }
@@ -41,6 +34,9 @@ public class VideoPlayer_UnityCommandBuf : SimpleVideoPlayer
             yield break;
         }
 
+        // cache coroutine reduce GC
+        _coroutine_time_interval = new WaitForSeconds(_timeinterval);
+
         CreateTexture(TEX_YUV_TYPE.Y, _texYWidth, _texYHeight);
         CreateTexture(TEX_YUV_TYPE.U, _texUVWidth, _texUVHeight);
         CreateTexture(TEX_YUV_TYPE.V, _texUVWidth, _texUVHeight);
@@ -48,6 +44,8 @@ public class VideoPlayer_UnityCommandBuf : SimpleVideoPlayer
         _yDebugImage.texture = mYTexture;
         _uDebugImage.texture = mUTexture;
         _vDebugImage.texture = mVTexture;
+
+        float scale = _texYWidth > 1920 ? 0.75f : 1.0f;
 
         if (mYTexture == null || mUTexture == null || mVTexture == null)
         {
@@ -82,10 +80,10 @@ public class VideoPlayer_UnityCommandBuf : SimpleVideoPlayer
                 // Graphics.ExecuteCommandBufferAsync(_command, ComputeQueueType.Background);
                 // Graphics.ExecuteCommandBuffer(_command);
                 // _command.Clear();
-                RenderVideoFrameBlit();
+                RenderVideoFrameBlitYUV(scale);
             }
 
-            yield return new WaitForSeconds(_timeinterval);
+            yield return _coroutine_time_interval;
             _curPlayTime += _timeinterval;
         }
     }

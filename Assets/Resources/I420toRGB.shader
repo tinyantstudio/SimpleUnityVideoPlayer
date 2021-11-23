@@ -1,4 +1,4 @@
-﻿Shader "Unlit/I420RGB"
+﻿Shader "Custom/I420RGB"
 {
     Properties
     {
@@ -53,6 +53,7 @@
             fixed4 frag(v2f i) : SV_Target
             {
                 fixed3 col = tex2D(_MainTex, i.uv);
+                // YUV data saved in Texture r channel
                 // return fixed4(col.rrr, 1.0);
                 fixed y = tex2D(_MainTex, i.uv).r;
                 fixed u = tex2D(_UTex, i.uv).r;

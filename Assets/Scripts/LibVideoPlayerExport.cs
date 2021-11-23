@@ -4,6 +4,9 @@ using UnityEngine;
 using System;
 using System.Runtime.InteropServices;
 
+// Native Player Export
+// Referenced DLL must be in PATH or in the PLUGINS folder
+// if not we will get DllNotFoundExeption
 public class LibVideoPlayerExport
 {
     [DllImport("videoPlayerLib", EntryPoint = "enter_test_videoPlayer_static_Lib")]
