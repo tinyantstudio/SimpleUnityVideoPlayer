@@ -14,6 +14,10 @@
 #define CHATENGINELIB_API __declspec(dllimport)
 #endif
 
+
+
+// just for Native Interop with C#
+
 extern "C"
 {
 	// C++ function pointer need C# delegate

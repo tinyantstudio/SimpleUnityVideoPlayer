@@ -6,6 +6,10 @@
 
 using namespace std;
 
+// 
+// Only Test for C# Interop with Native Libraries
+//
+
 class chatEngine
 {
 private:

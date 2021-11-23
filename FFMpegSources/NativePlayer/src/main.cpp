@@ -1,6 +1,6 @@
 #include <iostream>
 #include "videoPlayerExport.h"
-#include "chatEngineExport.h"
+//#include "chatEngineExport.h"
 #include <assert.h>
 
 // use for measure time consuming
@@ -17,17 +17,15 @@ int main(int argc, const char *argv[])
 {
 	std::cout << "Start Video Player Now..." << std::endl;
 	int ret = -1;
-	ret = enter_test_videoPlayer_static_Lib();
-	if (ret)
-		std::cout << "Fatal Error code: " << ret << std::endl;
-	else 
-	{
-		std::cout << "========================" << std::endl;
-		std::cout << "Run success" << std::endl;
-		std::cout << "========================" << std::endl;
-	}
-
-	return 0;
+	//ret = enter_test_videoPlayer_static_Lib();
+	//if (ret)
+	//	std::cout << "Fatal Error code: " << ret << std::endl;
+	//else 
+	//{
+	//	std::cout << "========================" << std::endl;
+	//	std::cout << "Run success" << std::endl;
+	//	std::cout << "========================" << std::endl;
+	//}
 
 	// Test for simplePlayer class
 	ret = player_init();

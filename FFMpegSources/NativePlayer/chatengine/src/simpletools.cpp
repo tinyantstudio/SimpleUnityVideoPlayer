@@ -66,12 +66,12 @@ void tool_modify_person(lp_tool_person_info data)
 {
 	data->infor->messagestr = "Message From C++ : Say Hello To C#";
 	// Exception in Unity3D Just fix it
-	data->infor->messagestr = "from C++ message str战国七雄，秦始皇!Why Not...";
+	data->infor->messagestr = "from C++ message str...";
 	data->infor->namestr = "C++ man";
 	data->infor->bvalue = true;
 
 	data->person->firstName = "Jack-Jack";
-	data->person->secondName = "MA-MA";
+	data->person->secondName = "MA-WA";
 
 	data->vals[0] = 1;
 	data->vals[1] = -1;
@@ -85,7 +85,7 @@ int tool_get_info(tool_info info)
 
 void* tool_get_string(const char* inputstring)
 {
-	char* str = "Hello world Native C++胜利之师!";
+	char* str = "Hello world Native C++!";
 	return (void*)str;
 	// return NULL;
 }
