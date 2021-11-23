@@ -14,6 +14,9 @@ using ffmpeg c++ for video decoding
 
 # Texture Updating
 
+> the key: we use yuv three textures(TextureFormat.R8) to store yuv plane value, and convert yuv to RGB with shader
+
+
 we have multi-ways to make texture updating
 
 ## "CPU" normal way pass raw frame buffer data to unity3d (RGB, YUV...)
@@ -83,9 +86,21 @@ renderRGBWithShader();
 
 ```
 
+# Road
+
+**we using yuv240 to render video frame, nativeplayer will output yuv frame buffer.**
+unity3d side we create three textures(YUV) , use shader sample yuv textures to outout RGB color  
+we store yuv plane value in texture's **R** Channel so our debug yuv texture will looks RED  
+
+YTexture : TextureFormat.R8  
+UTexture : TextureFormat.R8  
+VTexture : TextureFormat.R8  
+
+1. CPU-load buffer to update yuv texture each frame(Done)
+2. GPU using command buffer (Done)
+3. RenderAPI BackEnd (TODO)
 
 # How to Run
-
 
 # How to install ffmpeglib-win
 
@@ -106,4 +121,8 @@ cmake -G "Visual Studio 15" ..
 cmake -G "Visual Studio 15 Win64" ..
 ```
 
+
+# Result
+![image](https://user-images.githubusercontent.com/14041295/142991396-cf7ddb0f-3de4-4e08-833e-3ecb8f53e276.png)
+![image](https://user-images.githubusercontent.com/14041295/142991586-12de23db-474a-47ee-8654-98516dc40c34.png)
 
