@@ -44,7 +44,9 @@ unity3d side create textures by input video height , width and image format, use
 
 ```
 
-opengl maybe use glTexSubImage2D or glTexImage2D to update unity3d's texture in native opengl backend
+opengl ways:
+1. update texture buffer glTexSubImage2D or glTexImage2D to update unity3d's texture in native opengl backend
+2. render FBO?
 
 ```
 https://github.com/Unity-Technologies/NativeRenderingPlugin
