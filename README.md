@@ -89,25 +89,35 @@ renderRGBWithShader();
 # Road
 
 **we using yuv240 to render video frame, nativeplayer will output yuv frame buffer.**
-unity3d side we create three textures(YUV) , use shader sample yuv textures to outout RGB color  
+unity3d side we create three textures(YUV) , use shader sample yuv textures and with formula to outout RGB color  
 we store yuv plane value in texture's **R** Channel so our debug yuv texture will looks RED  
 
-YTexture : TextureFormat.R8  
-UTexture : TextureFormat.R8  
-VTexture : TextureFormat.R8  
+```
+YTexture : TextureFormat.R8  y in R Channel
+UTexture : TextureFormat.R8  u in R Channel
+VTexture : TextureFormat.R8  v in R Channel
+```
 
+## Dev Status
 1. CPU-load buffer to update yuv texture each frame(Done)
 2. GPU using command buffer (Done)
 3. RenderAPI BackEnd (TODO)
 
-# How to Run
+# How to Run Samples
+if not modify native-simple-player C++ and rebulid lib, just open scenes in unity editor
 
-# How to install ffmpeglib-win
+1. VideoPlayer-CommandBuffer scene(GPU command buffer)
+2. VideoPlayer-CPU.unity(normal CPU)
+
+
+# How to modify and build videoPlayerLib library
+
+## install ffmpeglib-win
 
 create 'ffmpeglib-win' folder at simplevideodemo/FFMpegSources/ place ffmpeg c++ windows library to this 'ffmpeglib-win' folder
 
 
-# How to build videoPlayerLib lib
+## make projects (visual studio)
 
 ```
 # UNIX Makefile
@@ -121,8 +131,10 @@ cmake -G "Visual Studio 15" ..
 cmake -G "Visual Studio 15 Win64" ..
 ```
 
+## build
 
-# Result
+
+# Screen Shot
 ![image](https://user-images.githubusercontent.com/14041295/142991396-cf7ddb0f-3de4-4e08-833e-3ecb8f53e276.png)
 ![image](https://user-images.githubusercontent.com/14041295/142991586-12de23db-474a-47ee-8654-98516dc40c34.png)
 ![image](https://user-images.githubusercontent.com/14041295/142991860-fec8f3e6-27f2-46ea-84a1-bfcdbab2b709.png)
