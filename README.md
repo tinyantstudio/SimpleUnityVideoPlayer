@@ -2,6 +2,8 @@
 render video in unity3d  
 using ffmpeg c++ for video decoding
 
+**unstable dev now, self project to learn**
+
 
 # How to make a simple video player in Unity3d
 
