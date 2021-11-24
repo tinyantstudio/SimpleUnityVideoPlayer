@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 
-project(NativePlayer)
+project(SimpleVideoPlayerForUnity)
 
 if(MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
@@ -22,14 +22,15 @@ link_directories("../ffmpeglib-win/lib")
 
 include_directories(Unity)
 include_directories(videoplayer/include)
-# include_directories(chatengine/include)
+include_directories(gl3w)
 
+add_subdirectory(renderplugin)
 add_subdirectory(videoplayer)
-# add_subdirectory(chatengine)
 
 add_executable(${PROJECT_NAME} ${PROJECT_SOURCES} ${PROJECT_HEADERS})
-target_link_libraries(${PROJECT_NAME} videoPlayerLib)
 
+target_link_libraries(${PROJECT_NAME} renderplugin)
+target_link_libraries(${PROJECT_NAME} nativevideoplayer)
 target_link_libraries(${PROJECT_NAME} avcodec avdevice avformat swscale avutil)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
@@ -40,10 +41,16 @@ add_custom_command(
     TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/../ffmpeglib-win/bin $<TARGET_FILE_DIR:${PROJECT_NAME}>)
 
-# copy videoPlayerlib dll to exe folder
+# copy nativevideoplayer dll to exe folder
 add_custom_command(
     TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/videoPlayerLib/$<CONFIGURATION> $<TARGET_FILE_DIR:${PROJECT_NAME}>
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/nativevideoplayer/$<CONFIGURATION> $<TARGET_FILE_DIR:${PROJECT_NAME}>
+)
+
+# copy renderplugin dll to exe folder
+add_custom_command(
+    TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/renderplugin/$<CONFIGURATION> $<TARGET_FILE_DIR:${PROJECT_NAME}>
 )
 
 # copy chatEngine dll to exe folder

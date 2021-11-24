@@ -9,6 +9,7 @@
 #define VIDEOPLAYERLIB_API __declspec(dllimport)
 #endif
 
+
 // define C interface
 // video plyer interface
 extern "C"

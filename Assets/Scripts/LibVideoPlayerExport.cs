@@ -9,59 +9,59 @@ using System.Runtime.InteropServices;
 // if not we will get DllNotFoundExeption
 public class LibVideoPlayerExport
 {
-    [DllImport("videoPlayerLib", EntryPoint = "enter_test_videoPlayer_static_Lib")]
+    [DllImport("nativevideoplayer", EntryPoint = "enter_test_videoPlayer_static_Lib")]
     public static extern int enter_test_videoPlayer_static_Lib();
 
-    [DllImport("videoPlayerLib")]
+    [DllImport("nativevideoplayer")]
     public static extern int player_init();
 
-    [DllImport("videoPlayerLib")]
+    [DllImport("nativevideoplayer")]
     public static extern int player_startPlayVideo(string filepath);
 
-    [DllImport("videoPlayerLib")]
+    [DllImport("nativevideoplayer")]
     public static extern int player_renderOneFrame();
 
-    [DllImport("videoPlayerLib")]
+    [DllImport("nativevideoplayer")]
     public static extern IntPtr player_getOneFrameBuffer();
 
     // we need to free frame buffer data alloc in native C++
-    [DllImport("videoPlayerLib")]
+    [DllImport("nativevideoplayer")]
     public static extern void player_getOneFrameBuffer_Done(IntPtr data);
 
-    [DllImport("videoPlayerLib")]
+    [DllImport("nativevideoplayer")]
     public static extern int player_shutdown();
 
-    [DllImport("videoPlayerLib")]
+    [DllImport("nativevideoplayer")]
     public static extern int player_get_width();
 
-    [DllImport("videoPlayerLib")]
+    [DllImport("nativevideoplayer")]
     public static extern int player_get_height();
 
-    [DllImport("videoPlayerLib")]
+    [DllImport("nativevideoplayer")]
     public static extern ulong player_get_duration();
 
-    [DllImport("videoPlayerLib")]
+    [DllImport("nativevideoplayer")]
     public static extern void player_setconfig([MarshalAs(UnmanagedType.Bool)] bool splityuv);
 
-    [DllImport("videoPlayerLib")]
+    [DllImport("nativevideoplayer")]
     public static extern System.IntPtr get_texture_callback_yuv_plane();
 
     // for debug get YUV buffer
-    [DllImport("videoPlayerLib")]
+    [DllImport("nativevideoplayer")]
     public static extern IntPtr player_peek_y_buffer();
 
-    [DllImport("videoPlayerLib")]
+    [DllImport("nativevideoplayer")]
     public static extern IntPtr player_peek_u_buffer();
 
-    [DllImport("videoPlayerLib")]
+    [DllImport("nativevideoplayer")]
     public static extern IntPtr player_peek_v_buffer();
 
-    [DllImport("videoPlayerLib")]
+    [DllImport("nativevideoplayer")]
     public static extern IntPtr player_get_pop_y_buffer();
 
-    [DllImport("videoPlayerLib")]
+    [DllImport("nativevideoplayer")]
     public static extern IntPtr player_get_pop_u_buffer();
 
-    [DllImport("videoPlayerLib")]
+    [DllImport("nativevideoplayer")]
     public static extern IntPtr player_get_pop_v_buffer();
 }

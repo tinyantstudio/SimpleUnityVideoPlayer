@@ -85,7 +85,7 @@ public class SimpleVideoPlayer : MonoBehaviour
         _toggleShowYUVTexture.onValueChanged.AddListener((ison) => { _yuvRoot.SetActive(ison); });
     }
 
-    protected void OnDestroy()
+    protected virtual void OnDestroy()
     {
         SimpleDebuger.LogInfo(TAG, "OnDestroy() shutdown native player...");
         LibVideoPlayerExport.player_shutdown();

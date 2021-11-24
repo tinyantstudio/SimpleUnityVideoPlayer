@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.1...3.17 FATAL_ERROR)
 
-project(videoPlayerLib VERSION 0.0.1)
+project(nativevideoplayer VERSION 0.0.1)
 
 if(MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
@@ -13,18 +13,15 @@ endif()
 
 file(GLOB PROJECT_SOURCES src/*.cpp)
 file(GLOB PROJECT_HEADERS include/*.h)
-file(GLOB PROJECT_UNITY ../Unity/*.h)
 
 source_group("Sources" FILES ${PROJECT_SOURCES})
 source_group("Headers" FILES ${PROJECT_HEADERS})
-source_group("Unity" FILES ${PROJECT_UNITY})
 
-# include_directories(../../ffmpeglib-win/include)
 link_directories("../../ffmpeglib-win/lib")
 
-message("videoPlayerLib  --> ${PROJECT_NAME}")
+message("nativevideoplayer  --> ${PROJECT_NAME}")
 
-add_library(${PROJECT_NAME} SHARED ${PROJECT_SOURCES} ${PROJECT_HEADERS} ${PROJECT_UNITY})
+add_library(${PROJECT_NAME} SHARED ${PROJECT_SOURCES} ${PROJECT_HEADERS} ${PROJECT_UNITY} ${PROJECT_GL3W} ${PROJECT_RENDER_PLUGIN})
 
 target_link_libraries(${PROJECT_NAME} avcodec avdevice avformat swscale avutil)
 
