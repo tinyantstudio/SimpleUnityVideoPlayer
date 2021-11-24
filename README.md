@@ -4,7 +4,6 @@ using ffmpeg c++ for video decoding
 
 **unstable dev now, self project to learn**
 
-
 # How to make a simple video player in Unity3d
 
 1. load video data by ffmpeg or other video decode tools to decode video file get video informations(fps, duration, format type ...)
@@ -115,10 +114,10 @@ VTexture : TextureFormat.R8  v in R Channel
 ```
 
 ## Dev Status
-1. CPU-load buffer to update yuv texture each frame(Done)
-2. GPU using command buffer (Done)
-3. RenderAPI BackEnd->Windows OpenGL Core with glTexSubImage2D(Done)
-4. RenderAPI BackEnd->Windows DX(TODO)
+- [x] CPU-load buffer to update yuv texture each frame(Done)
+- [x] GPU using command buffer (Done)
+- [x] RenderAPI BackEnd->Windows OpenGL Core with glTexSubImage2D(Done)
+- [ ] RenderAPI BackEnd->Windows DX(TODO)
 
 # How to Run Samples
 if not modify native-simple-player C++ and rebulid lib, just open scenes in unity editor
