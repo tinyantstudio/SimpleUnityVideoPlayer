@@ -4,5 +4,14 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/VideoPlayer-CommandBuffer.unity
+    guid: 1cc56b3b0e7f8404988307c02d9c271e
+  - enabled: 1
+    path: Assets/VideoPlayer-CPU.unity
+    guid: 7b4cfa0933f8af943adb56ff11eeef3a
+  - enabled: 1
+    path: Assets/VideoPlayer-OPENGL.unity
+    guid: b7325d1bd3e07b34cbaeb925e1244011
   m_configObjects: {}

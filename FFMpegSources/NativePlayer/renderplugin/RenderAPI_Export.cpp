@@ -183,8 +183,8 @@ static void ModifyYUVTextureWithVideoFrameData()
 		framedata_U = player_get_pop_u_buffer();
 		framedata_V = player_get_pop_v_buffer();
 
-		const int rowPitchY = g_TextureWidth_Y * 1;
-		const int rowPitchUV = g_TextureWidth_UV * 1;
+		const int rowPitchY = s_CurrentAPI->GetRowPitch(g_TextureWidth_Y, g_TextureHeight_Y, 1);
+		const int rowPitchUV = s_CurrentAPI->GetRowPitch(g_TextureWidth_UV, g_TextureHeight_UV, 1);
 
 		s_CurrentAPI->ModifyTextureWithInputData(g_TextureHandle_Y, g_TextureWidth_Y, g_TextureHeight_Y, rowPitchY, framedata_Y);
 		s_CurrentAPI->ModifyTextureWithInputData(g_TextureHandle_U, g_TextureWidth_UV, g_TextureHeight_UV, rowPitchUV, framedata_U);

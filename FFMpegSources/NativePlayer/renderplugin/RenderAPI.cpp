@@ -19,9 +19,8 @@ RenderAPI* CreateRenderAPI(UnityGfxRenderer apiType)
 #	if SUPPORT_D3D12
 	if (apiType == kUnityGfxRendererD3D12)
 	{
-		return NULL;
-		/*extern RenderAPI* CreateRenderAPI_D3D12();
-		return CreateRenderAPI_D3D12();*/
+		extern RenderAPI* CreateRenderAPI_D3D12();
+		return CreateRenderAPI_D3D12();
 	}
 #	endif // if SUPPORT_D3D12
 
@@ -39,7 +38,7 @@ RenderAPI* CreateRenderAPI(UnityGfxRenderer apiType)
 	{
 		extern RenderAPI* CreateRenderAPI_Metal();
 		return CreateRenderAPI_Metal();
-}
+	}
 #	endif // if SUPPORT_METAL
 
 #	if SUPPORT_VULKAN

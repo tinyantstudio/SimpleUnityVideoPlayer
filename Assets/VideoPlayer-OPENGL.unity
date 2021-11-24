@@ -155,8 +155,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 406.6, y: -18.8}
-  m_SizeDelta: {x: 813.2171, y: 37.616577}
+  m_AnchoredPosition: {x: 531.57, y: -156}
+  m_SizeDelta: {x: 1026.1396, y: 267.05194}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &308712004
 MonoBehaviour:
@@ -190,8 +190,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: " - Windows OpenGL RenderAPI(Supported)\n -  DX(Not Supported)\n\nSet Graphics
-    API For Windows to OpenGL Core"
+  m_Text: "Windows \n - OpenGLCore(Supported)\n - DX11(Supported)\n - DX12(Not Supported)\nSet
+    Graphics API For Windows to OpenGL Core or DX11 "
 --- !u!222 &308712005
 CanvasRenderer:
   m_ObjectHideFlags: 0

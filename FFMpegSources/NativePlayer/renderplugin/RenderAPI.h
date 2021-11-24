@@ -18,6 +18,11 @@ public:
 
 	// Update Texture Data with input buffer
 	virtual void ModifyTextureWithInputData(void* textureHandle, int width, int height, int rowPitch, void* dataPtr) = 0;
+
+	virtual int GetRowPitch(int width, int height, int pixelSize)
+	{
+		return width * pixelSize;
+	}
 };
 
 // Create a graphics API implementation instance for the given API type.
