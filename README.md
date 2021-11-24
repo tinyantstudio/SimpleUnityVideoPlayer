@@ -114,6 +114,7 @@ VTexture : TextureFormat.R8  v in R Channel
 ```
 
 ## Dev Status
+- [x] Very simple decode video frame using ffmpeg in windows(Done)
 - [x] CPU-load buffer to update yuv texture each frame(Done)
 - [x] GPU using command buffer (Done)
 - [x] RenderAPI BackEnd->Windows OpenGL Core with glTexSubImage2D(Done)
@@ -124,6 +125,7 @@ if not modify native-simple-player C++ and rebulid lib, just open scenes in unit
 
 1. VideoPlayer-CommandBuffer scene(GPU command buffer)
 2. VideoPlayer-CPU.unity(normal CPU)
+3. VideoPlayer-OPENGL.unity(RenderAPI OpenGLCore glTexSubImage2D)
 
 
 # How to modify and build videoPlayerLib library
