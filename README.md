@@ -117,7 +117,8 @@ VTexture : TextureFormat.R8  v in R Channel
 ## Dev Status
 1. CPU-load buffer to update yuv texture each frame(Done)
 2. GPU using command buffer (Done)
-3. RenderAPI BackEnd (TODO)
+3. RenderAPI BackEnd->Windows OpenGL Core with glTexSubImage2D(Done)
+4. RenderAPI BackEnd->Windows DX(TODO)
 
 # How to Run Samples
 if not modify native-simple-player C++ and rebulid lib, just open scenes in unity editor
