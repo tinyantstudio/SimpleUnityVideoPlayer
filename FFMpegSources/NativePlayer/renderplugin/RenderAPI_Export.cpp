@@ -183,9 +183,12 @@ static void ModifyYUVTextureWithVideoFrameData()
 		framedata_U = player_get_pop_u_buffer();
 		framedata_V = player_get_pop_v_buffer();
 
-		s_CurrentAPI->ModifyTextureWithInputData(g_TextureHandle_Y, g_TextureWidth_Y, g_TextureHeight_Y, 0, framedata_Y);
-		s_CurrentAPI->ModifyTextureWithInputData(g_TextureHandle_U, g_TextureWidth_UV, g_TextureHeight_UV, 0, framedata_U);
-		s_CurrentAPI->ModifyTextureWithInputData(g_TextureHandle_V, g_TextureWidth_UV, g_TextureHeight_UV, 0, framedata_V);
+		const int rowPitchY = g_TextureWidth_Y * 1;
+		const int rowPitchUV = g_TextureWidth_UV * 1;
+
+		s_CurrentAPI->ModifyTextureWithInputData(g_TextureHandle_Y, g_TextureWidth_Y, g_TextureHeight_Y, rowPitchY, framedata_Y);
+		s_CurrentAPI->ModifyTextureWithInputData(g_TextureHandle_U, g_TextureWidth_UV, g_TextureHeight_UV, rowPitchUV, framedata_U);
+		s_CurrentAPI->ModifyTextureWithInputData(g_TextureHandle_V, g_TextureWidth_UV, g_TextureHeight_UV, rowPitchUV, framedata_V);
 
 		// std::cout << TAG << "ModifyYUVTextureWithVideoFrameData() Update YUV Texture..." << std::endl;
 	}
