@@ -48,14 +48,13 @@ Cons:
 unity3d side create textures by input video height , width and image format, use GetNativeTexturePtr() get texture2d's native ptr pass to native-render-backend, each frame we using opengl or dx to updating texture data
 
 ```
-
 opengl ways:
 1. update texture buffer glTexSubImage2D or glTexImage2D to update unity3d's texture in native opengl backend
 2. if we using SurfaceTexture in Android, we can sample SurfaceTexture to fbo -> convert GL_TEXTURE_EXTERNAL_OES to GL_TEXTURE -> update unity3d's texture
-
-
-
 ```
+
+**Based On Unity3d's NativeRenderingPlugin to create multi RenderAPI backend.**  
+
 https://github.com/Unity-Technologies/NativeRenderingPlugin
 
 
@@ -118,7 +117,8 @@ VTexture : TextureFormat.R8  v in R Channel
 - [x] CPU-load buffer to update yuv texture each frame(Done)
 - [x] GPU using command buffer (Done)
 - [x] RenderAPI BackEnd->Windows OpenGL Core with glTexSubImage2D(Done)
-- [ ] RenderAPI BackEnd->Windows DX(TODO)
+- [x] RenderAPI BackEnd->Windows DX11(Done)
+- [ ] RenderAPI BackEnd->Windows DX12(TODO)
 
 # How to Run Samples
 if not modify native-simple-player C++ and rebulid lib, just open scenes in unity editor
