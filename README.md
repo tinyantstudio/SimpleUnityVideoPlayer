@@ -11,7 +11,7 @@ using ffmpeg c++ for video decoding
 4. pass one frame data buffer from native player to unity3d (normal way)
 5. unity3d convert native frame data buffer to byte array(like Inptr to byte array)
 5. unity3d side need to create texture and updating texture with bytes
-6. unity3d side we should convert frame buffer data to RGB color if input frame data isn't RGB format(like Y,UV to RGB)
+6. unity3d side we should convert frame buffer data to RGB color if input frame data isn't RGB format(like Y,UV to RGB) Convert to RGB formats for rendering/effects.
 
 # Video decode
 
