@@ -11,7 +11,7 @@ using ffmpeg c++ for video decoding
 4. pass one frame data buffer from native player to unity3d (normal way)
 5. unity3d convert native frame data buffer to byte array(like Inptr to byte array)
 5. unity3d side need to create texture and updating texture with bytes
-6. unity3d side we should convert frame buffer data to RGB color if input frame data isn't RGB format(like Y,UV to RGB)
+6. unity3d side we should convert frame buffer data to RGB color if input frame data isn't RGB format(like Y,UV to RGB) Convert to RGB formats for rendering/effects.
 
 # Video decode
 
@@ -51,6 +51,7 @@ unity3d side create textures by input video height , width and image format, use
 opengl ways:
 1. update texture buffer glTexSubImage2D or glTexImage2D to update unity3d's texture in native opengl backend
 2. if we using SurfaceTexture in Android, we can sample SurfaceTexture to fbo -> convert GL_TEXTURE_EXTERNAL_OES to GL_TEXTURE -> update unity3d's texture
+3. PBO
 ```
 
 **Based On Unity3d's NativeRenderingPlugin to create multi RenderAPI backend.**  
