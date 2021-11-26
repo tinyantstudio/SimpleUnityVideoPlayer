@@ -22,6 +22,10 @@ using UnityEngine.UI;
 // 4. unity's ReadPixels() CPU and GPU stall but in same frame unity should wait unit this frame render finished
 // 5. unity's CommandBuffer Compute Shader ? 
 
+
+// use case 
+// 1. make painting app just using texture2d in GPU don't read/write back from GPU and CPU
+
 public class RecordCamera : MonoBehaviour
 {
     //
