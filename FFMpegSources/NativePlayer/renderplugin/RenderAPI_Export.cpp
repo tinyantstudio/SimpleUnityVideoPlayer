@@ -206,6 +206,13 @@ typedef enum CustomEventType
 	kCustom_VideoPlayerInvalid = 1 << 12
 }CustomEventType;
 
+
+//enum class CustomEventType
+//{
+//	Test01,
+//	Test02,
+//};
+
 // Unity Render Thread 
 // Make native render here
 static void UNITY_INTERFACE_API OnRenderEvent(int eventID)
