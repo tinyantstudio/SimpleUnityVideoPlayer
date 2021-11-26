@@ -172,6 +172,11 @@ public class RecordCamera : MonoBehaviour
         // if use Color32ArrayToByteArray take 0.5ms but double buffer data size (Incremental GC no GC.Collect called)
         // if use GetRawTextureData take 0.5ms one buffer data size (Incremental GC no GC.Collect called)
 
+        //
+        // need waitforendofframe to readpixels from rendertexture
+        // or just call Camera.Render() manually not recommend when video capture.
+        // 
+
         RenderTexture rt = GetRenderTexture(captureWidth, captureHeight, RenderTextureFormat.ARGB32);
         mTargetCamera.targetTexture = rt;
         mTargetCamera.Render();
