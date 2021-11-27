@@ -17,7 +17,16 @@ file(GLOB PROJECT_HEADERS include/*.h)
 source_group("Sources" FILES ${PROJECT_SOURCES})
 source_group("Headers" FILES ${PROJECT_HEADERS})
 
-link_directories("../../ffmpeglib-win/lib")
+
+if(MSVC)
+    set(ffmpeg_include ../ffmpeglib-win/include)
+    set(ffmpeg_lib "../ffmpeglib-win/lib")
+else()
+    set(ffmpeg_include /usr/local/Cellar/ffmpeg/4.4_2/include)
+    set(ffmpeg_lib "/usr/local/Cellar/ffmpeg/4.4_2/lib")
+endif()
+
+link_directories(ffmpeg_lib)
 
 message("nativevideoplayer  --> ${PROJECT_NAME}")
 

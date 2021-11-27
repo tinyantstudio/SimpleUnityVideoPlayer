@@ -24,7 +24,16 @@ source_group("Unity" FILES ${PROJECT_UNITY})
 message("renderplugin  --> ${PROJECT_NAME}")
 
 add_library(${PROJECT_NAME} SHARED ${PROJECT_UNITY} ${PROJECT_GL3W} ${PROJECT_RENDER_PLUGIN})
-target_link_libraries(${PROJECT_NAME} opengl32 nativevideoplayer)
+# fill with find_package for OPENGL_LIBRARY
+message("renderplugin --> ${OPENGL_LIBRARY}")
 
-set_target_properties(${PROJECT_NAME} PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${PROJECT_NAME})
+if(MSVC)
+    target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARY} nativevideoplayer)
+else()
+    target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARY} "-framework Cocoa -framework OpenGL" nativevideoplayer)
+endif()
+
+if(MSVC)
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${PROJECT_NAME})
+endif()

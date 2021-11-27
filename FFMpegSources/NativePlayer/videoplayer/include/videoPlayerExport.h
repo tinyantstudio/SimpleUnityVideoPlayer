@@ -3,10 +3,24 @@
 
 #include "IUnityGraphics.h"
 
-#ifdef VIDEOPLAYERLIB_EXPORTS
-#define VIDEOPLAYERLIB_API __declspec(dllexport)
+//#ifdef VIDEOPLAYERLIB_EXPORTS
+//#define VIDEOPLAYERLIB_API __declspec(dllexport)
+//#else
+//#define VIDEOPLAYERLIB_API __declspec(dllimport)
+//#endif
+
+#if defined(__CYGWIN32__)
+    #define VIDEOPLAYERLIB_API __stdcall
+    #define VIDEOPLAYERLIB_EXPORT __declspec(dllexport)
+#elif defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(_WIN64) || defined(WINAPI_FAMILY)
+    #define VIDEOPLAYERLIB_API __stdcall
+    #define VIDEOPLAYERLIB_EXPORT __declspec(dllexport)
+#elif defined(__MACH__) || defined(__ANDROID__) || defined(__linux__)
+    #define VIDEOPLAYERLIB_API
+    #define VIDEOPLAYERLIB_EXPORT
 #else
-#define VIDEOPLAYERLIB_API __declspec(dllimport)
+    #define VIDEOPLAYERLIB_API
+    #define VIDEOPLAYERLIB_EXPORT
 #endif
 
 

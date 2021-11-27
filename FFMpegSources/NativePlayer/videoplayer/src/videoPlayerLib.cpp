@@ -15,7 +15,13 @@
 #endif
 
 //#define _CRT_SECURE_NO_WARNINGS
+
+#include <thread>
+#include <chrono>
+
+#ifdef _WIN32
 #pragma warning(disable:4996)
+#endif
 
 // import ffmpeg contents
 
@@ -109,7 +115,8 @@ void mainLoop()
 		}
 		else
 		{
-			Sleep(1);
+			// Sleep(1);
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 		}
 		_lastUpdate = now;
 	}

@@ -33,11 +33,13 @@ RenderAPI* CreateRenderAPI(UnityGfxRenderer apiType)
 	}
 #	endif // if SUPPORT_OPENGL_UNIFIED
 
+    // Not Support Metal Now
 #	if SUPPORT_METAL
 	if (apiType == kUnityGfxRendererMetal)
 	{
-		extern RenderAPI* CreateRenderAPI_Metal();
-		return CreateRenderAPI_Metal();
+//		extern RenderAPI* CreateRenderAPI_Metal();
+//		return CreateRenderAPI_Metal();
+        return NULL;
 	}
 #	endif // if SUPPORT_METAL
 
