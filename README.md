@@ -120,6 +120,7 @@ VTexture : TextureFormat.R8  v in R Channel
 - [x] RenderAPI BackEnd->Windows OpenGL Core with glTexSubImage2D(Done)
 - [x] RenderAPI BackEnd->Windows DX11(Done)
 - [ ] RenderAPI BackEnd->Windows DX12(TODO)
+- [x] RenderAPI BackEnd->MacOSX OpenGL Core(Done)
 
 # How to Run Samples
 if not modify native-simple-player C++ and rebulid lib, just open scenes in unity editor
