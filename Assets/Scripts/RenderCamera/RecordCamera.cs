@@ -98,7 +98,6 @@ public class RecordCamera : MonoBehaviour
     {
     }
 
-
     private Texture2D _backUpTexture2D;
     private RenderTexture _backUpRenderTexture;
 
@@ -141,16 +140,6 @@ public class RecordCamera : MonoBehaviour
         }
         return _backUpRenderTexture;
     }
-
-    private
-
-
-    IEnumerator _start()
-    {
-        yield return new WaitForEndOfFrame();
-        FirstWay();
-    }
-
 
     private void DefaultWay()
     {
